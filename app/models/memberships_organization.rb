@@ -1,0 +1,3 @@
+class MembershipsOrganization < ApplicationRecord
+  
+end
