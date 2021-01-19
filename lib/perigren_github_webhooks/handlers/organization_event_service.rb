@@ -1,4 +1,4 @@
-module GithubWebhookServices
+module PerigrenGithubWebhooks
   class OrganizationEventService < GithubWebhookService
     def perform
       super

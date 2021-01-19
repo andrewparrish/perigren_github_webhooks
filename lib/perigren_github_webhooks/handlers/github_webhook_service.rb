@@ -1,4 +1,4 @@
-module GithubWebhookServices
+module PerigrenGithubWebhooks
   class GithubWebhookService
     def initialize(data)
       @data = data

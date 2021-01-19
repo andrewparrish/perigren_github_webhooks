@@ -1,4 +1,4 @@
-module GithubWebhookServices
+module PerigrenGithubWebhooks
   # TODO: Relationships between repos, orgs, teams
   class TeamEventService < GithubWebhookService
     def perform

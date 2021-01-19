@@ -1,4 +1,4 @@
-module GithubWebhookServices
+module PerigrenGithubWebhooks
   class CommitCommentEventService < GithubWebhookService
     def perform
       super

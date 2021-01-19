@@ -1,4 +1,4 @@
-module GithubWebhookServices
+module PerigrenGithubWebhooks
   class InstallationEventService < GithubWebhookService
     CREATE_ACTIONS = %w[created added]
     DELETE_ACTIONS = %w[deleted removed]
