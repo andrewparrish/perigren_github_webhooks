@@ -6,8 +6,12 @@ gemspec
 
 group :development do
   gem 'sqlite3'
-  gem 'rspec'
   gem 'pry', '~> 0.13.1'
+  gem 'rspec-rails', '~> 4.0.2'
+end
+
+group :test do
+  gem 'rspec-rails', '~> 4.0.2'
 end
 
 # To use a debugger
