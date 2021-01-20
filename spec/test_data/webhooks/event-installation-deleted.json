@@ -1,0 +1,72 @@
+{
+  "action": "deleted",
+  "installation": {
+    "id": 135043,
+    "account": {
+      "login": "andrewparrish",
+      "id": 3136770,
+      "avatar_url": "https://avatars0.githubusercontent.com/u/3136770?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/andrewparrish",
+      "html_url": "https://github.com/andrewparrish",
+      "followers_url": "https://api.github.com/users/andrewparrish/followers",
+      "following_url": "https://api.github.com/users/andrewparrish/following{/other_user}",
+      "gists_url": "https://api.github.com/users/andrewparrish/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/andrewparrish/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/andrewparrish/subscriptions",
+      "organizations_url": "https://api.github.com/users/andrewparrish/orgs",
+      "repos_url": "https://api.github.com/users/andrewparrish/repos",
+      "events_url": "https://api.github.com/users/andrewparrish/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/andrewparrish/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "repository_selection": "selected",
+    "access_tokens_url": "https://api.github.com/installations/135043/access_tokens",
+    "repositories_url": "https://api.github.com/installation/repositories",
+    "html_url": "https://github.com/settings/installations/135043",
+    "app_id": 11355,
+    "target_id": 3136770,
+    "target_type": "User",
+    "permissions": {
+      "pull_requests": "write",
+      "administration": "read",
+      "statuses": "read",
+      "metadata": "read"
+    },
+    "events": [
+      "label",
+      "member",
+      "membership",
+      "organization",
+      "pull_request",
+      "pull_request_review",
+      "pull_request_review_comment",
+      "repository",
+      "team",
+      "team_add"
+    ],
+    "created_at": "2018-04-22T00:58:57.000Z",
+    "updated_at": "2018-04-22T00:58:58.000Z",
+    "single_file_name": null
+  },
+  "sender": {
+    "login": "andrewparrish",
+    "id": 3136770,
+    "avatar_url": "https://avatars0.githubusercontent.com/u/3136770?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/andrewparrish",
+    "html_url": "https://github.com/andrewparrish",
+    "followers_url": "https://api.github.com/users/andrewparrish/followers",
+    "following_url": "https://api.github.com/users/andrewparrish/following{/other_user}",
+    "gists_url": "https://api.github.com/users/andrewparrish/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/andrewparrish/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/andrewparrish/subscriptions",
+    "organizations_url": "https://api.github.com/users/andrewparrish/orgs",
+    "repos_url": "https://api.github.com/users/andrewparrish/repos",
+    "events_url": "https://api.github.com/users/andrewparrish/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/andrewparrish/received_events",
+    "type": "User",
+    "site_admin": false
+  }
+}

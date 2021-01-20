@@ -1,0 +1,9 @@
+{
+    "class":"SynchronizePullRequestWorker",
+    "args":[205517141],
+    "retry":true,
+    "queue":"default",
+    "jid":"bee38122e93cdd8405f5fe68",
+    "created_at":1535721293.639072,
+    "enqueued_at":1535721293.640212
+}

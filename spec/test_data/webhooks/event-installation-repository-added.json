@@ -1,0 +1,84 @@
+{
+  "action": "added",
+  "installation": {
+    "id": 165203,
+    "account": {
+      "login": "andrewparrish",
+      "id": 3136770,
+      "avatar_url": "https://avatars0.githubusercontent.com/u/3136770?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/andrewparrish",
+      "html_url": "https://github.com/andrewparrish",
+      "followers_url": "https://api.github.com/users/andrewparrish/followers",
+      "following_url": "https://api.github.com/users/andrewparrish/following{/other_user}",
+      "gists_url": "https://api.github.com/users/andrewparrish/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/andrewparrish/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/andrewparrish/subscriptions",
+      "organizations_url": "https://api.github.com/users/andrewparrish/orgs",
+      "repos_url": "https://api.github.com/users/andrewparrish/repos",
+      "events_url": "https://api.github.com/users/andrewparrish/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/andrewparrish/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "repository_selection": "all",
+    "access_tokens_url": "https://api.github.com/installations/165203/access_tokens",
+    "repositories_url": "https://api.github.com/installation/repositories",
+    "html_url": "https://github.com/settings/installations/165203",
+    "app_id": 11355,
+    "target_id": 3136770,
+    "target_type": "User",
+    "permissions": {
+      "pull_requests": "write",
+      "administration": "read",
+      "statuses": "read",
+      "metadata": "read"
+    },
+    "events": [
+      "label",
+      "member",
+      "membership",
+      "organization",
+      "pull_request",
+      "pull_request_review",
+      "pull_request_review_comment",
+      "repository",
+      "team",
+      "team_add"
+    ],
+    "created_at": 1525913488,
+    "updated_at": 1526251854,
+    "single_file_name": null
+  },
+  "repository_selection": "all",
+  "repositories_added": [
+    {
+      "id": 133280400,
+      "name": "call-to-the-win-web",
+      "full_name": "andrewparrish/call-to-the-win-web",
+      "private": true
+    }
+  ],
+  "repositories_removed": [
+
+  ],
+  "sender": {
+    "login": "andrewparrish",
+    "id": 3136770,
+    "avatar_url": "https://avatars0.githubusercontent.com/u/3136770?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/andrewparrish",
+    "html_url": "https://github.com/andrewparrish",
+    "followers_url": "https://api.github.com/users/andrewparrish/followers",
+    "following_url": "https://api.github.com/users/andrewparrish/following{/other_user}",
+    "gists_url": "https://api.github.com/users/andrewparrish/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/andrewparrish/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/andrewparrish/subscriptions",
+    "organizations_url": "https://api.github.com/users/andrewparrish/orgs",
+    "repos_url": "https://api.github.com/users/andrewparrish/repos",
+    "events_url": "https://api.github.com/users/andrewparrish/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/andrewparrish/received_events",
+    "type": "User",
+    "site_admin": false
+  }
+}

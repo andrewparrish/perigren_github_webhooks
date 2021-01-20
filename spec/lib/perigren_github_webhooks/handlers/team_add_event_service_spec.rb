@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'perigren_github_webhooks'
+require 'pry'
 
 RSpec.describe PerigrenGithubWebhooks::Handlers::TeamAddEventService, type: :service do
   let(:test_data) { JSON.parse(File.read('spec/test_data/webhooks/event-team-add.json')) }
@@ -8,6 +9,7 @@ RSpec.describe PerigrenGithubWebhooks::Handlers::TeamAddEventService, type: :ser
     event = nil
 
     before do
+      binding.pry
       event = described_class.new(test_data).perform
     end
 
@@ -23,6 +25,7 @@ RSpec.describe PerigrenGithubWebhooks::Handlers::TeamAddEventService, type: :ser
     end
 
     it 'creates the org' do
+      binding.pry
       org = Organization.find(test_data['organization']['id'])
       expect(org.login).to eq 'Octocoders'
     end

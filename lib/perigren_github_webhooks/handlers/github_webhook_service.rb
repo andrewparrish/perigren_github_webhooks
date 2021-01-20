@@ -11,6 +11,7 @@ module PerigrenGithubWebhooks
 
       def create_user(user_data)
         user_klass = user_data['type'].constantize
+        # TODO: Configurable overwrite on user class
         user_klass = GithubUser if user_klass == User
         user = user_klass.find_or_initialize_by(id: user_data['id'])
         user.update(user_data.select do |k, _v|
