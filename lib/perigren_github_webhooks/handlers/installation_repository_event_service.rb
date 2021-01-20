@@ -1,46 +1,48 @@
 module PerigrenGithubWebhooks
-  class InstallationRepositoryEventService < GithubWebhookService
-    def perform
-      super
-      create_installation(@data['installation'])
-      create_repositories
+  module Handlers
+    class InstallationRepositoryEventService < GithubWebhookService
+      def perform
+        super
+        create_installation(@data['installation'])
+        create_repositories
 
-      create_event
-    end
-
-    def create_event
-      InstallationRepositoriesEvent.create(
-        action: @data['action'],
-        installation_id: @installation.id,
-        sender: @sender,
-        repository_selection: @data['repository_selection'],
-        repositories_added: @data['repositories_added'].map { |r| r['id'] },
-        repositories_removed: @data['repositories_removed'].map { |r| r['id'] }
-      )
-    end
-
-    def create_repositories
-      if(@data['repositories'])
-        @data['repositories'].each { |repo| handle_repo(repo, @data['action']) }
+        create_event
       end
 
-      if(@data['repositories_added'])
-        @data['repositories_added'].each { |repo| handle_repo(repo, 'added') }
+      def create_event
+        InstallationRepositoriesEvent.create(
+          action: @data['action'],
+          installation_id: @installation.id,
+          sender: @sender,
+          repository_selection: @data['repository_selection'],
+          repositories_added: @data['repositories_added'].map { |r| r['id'] },
+          repositories_removed: @data['repositories_removed'].map { |r| r['id'] }
+        )
       end
 
-      if(@data['repositories_removed'])
-        @data['repositories_removed'].each { |repo| handle_repo(repo, 'removed') }
+      def create_repositories
+        if(@data['repositories'])
+          @data['repositories'].each { |repo| handle_repo(repo, @data['action']) }
+        end
+
+        if(@data['repositories_added'])
+          @data['repositories_added'].each { |repo| handle_repo(repo, 'added') }
+        end
+
+        if(@data['repositories_removed'])
+          @data['repositories_removed'].each { |repo| handle_repo(repo, 'removed') }
+        end
       end
-    end
 
-    private
+      private
 
-    def handle_repo(repo, action)
-      repo = create_repository(repo)
-      if(action == 'added')
-        InstallationsRepository.find_or_create_by(installation_id: @installation.id, repository_id: repo.id)
-      elsif (action == 'removed')
-        InstallationsRepository.where(installation_id: @installation.id, repository_id: repo.id).delete_all
+      def handle_repo(repo, action)
+        repo = create_repository(repo)
+        if(action == 'added')
+          InstallationsRepository.find_or_create_by(installation_id: @installation.id, repository_id: repo.id)
+        elsif (action == 'removed')
+          InstallationsRepository.where(installation_id: @installation.id, repository_id: repo.id).delete_all
+        end
       end
     end
   end

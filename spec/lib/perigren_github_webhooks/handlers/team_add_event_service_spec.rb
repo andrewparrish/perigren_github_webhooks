@@ -1,4 +1,7 @@
-RSpec.describe GithubWebhookServices::TeamAddEventService, type: :service do
+require 'spec_helper'
+require 'perigren_github_webhooks'
+
+RSpec.describe PerigrenGithubWebhooks::Handlers::TeamAddEventService, type: :service do
   let(:test_data) { JSON.parse(File.read('spec/test_data/webhooks/event-team-add.json')) }
 
   describe '#perform' do

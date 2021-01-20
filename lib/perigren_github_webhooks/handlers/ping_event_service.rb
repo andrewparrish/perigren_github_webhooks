@@ -1,10 +1,12 @@
 module PerigrenGithubWebhooks
-  class PingEventService
-    def initialize(data)
-    end
+  module Handlers
+    class PingEventService
+      def initialize(data)
+      end
 
-    def perform
-      true
+      def perform
+        true
+      end
     end
   end
 end

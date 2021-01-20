@@ -1,4 +1,6 @@
-RSpec.describe GithubWebhookServices::OrganizationEventService, type: :service do
+require 'perigren_github_webhooks'
+
+RSpec.describe PerigrenGithubWebhooks::Handlers::OrganizationEventService, type: :service do
   let(:test_data) { JSON.parse(File.read('spec/test_data/webhooks/event-organization.json')) }
 
   describe '#perform' do

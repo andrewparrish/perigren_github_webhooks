@@ -1,4 +1,6 @@
-RSpec.describe GithubWebhookServices::PullRequestEventService, type: :service do
+require 'perigren_github_webhooks'
+
+RSpec.describe PerigrenGithubWebhooks::Handlers::PullRequestEventService, type: :service do
   let(:test_data) { JSON.parse(File.read('spec/test_data/webhooks/event-pull-request.json')) }
 
   event = nil
