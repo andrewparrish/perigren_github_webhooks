@@ -21,8 +21,14 @@ Or install it yourself as:
 $ gem install perigren_github_webhooks
 ```
 
+## Configuration
+
+* Setting User model
+
 ## Contributing
-Contribution directions go here.
+
+* Models setup
+* Modifying database.yml 
 
 ## License
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
