@@ -16,13 +16,13 @@ RSpec.describe PerigrenGithubWebhooks::CreateEventService, type: :service do
     end
 
     it 'creates the repository' do
-      repo = Repository.find(test_data['repository']['id'])
+      repo = PerigrenGithubWebhooks::Repository.find(test_data['repository']['id'])
       expect(repo.node_id).to eq test_data['repository']['node_id']
       expect(repo.name).to eq 'Hello-World'
     end
 
     it 'creates the sender' do
-      user = GithubUser.find(21031067)
+      user = PerigrenGithubWebhooks::GithubUser.find(21031067)
       expect(user.login).to eq 'Codertocat'
       expect(user.site_admin).to be_falsey
     end

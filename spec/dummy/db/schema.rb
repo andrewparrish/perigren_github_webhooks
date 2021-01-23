@@ -64,9 +64,12 @@ ActiveRecord::Schema.define(version: 2021_01_22_145315) do
     t.string "master_branch"
     t.text "description"
     t.string "pusher_type"
+    t.integer "sender_id"
+    t.string "sender_type"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["ref"], name: "index_create_events_on_ref"
+    t.index ["sender_id"], name: "index_create_events_on_sender_id"
   end
 
   create_table "github_users", force: :cascade do |t|

@@ -1,5 +1,6 @@
 module PerigrenGithubWebhooks
   class GithubUser < ApplicationRecord
+    # TODO: This needs to use the config
     has_one :user, foreign_key: 'uid'
     has_many :github_users_installations, class_name: 'GithubUsersInstallations'
     has_many :github_users_organizations, class_name: 'GithubUsersOrganizations'

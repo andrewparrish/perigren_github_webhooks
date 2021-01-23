@@ -41,6 +41,8 @@ class PerigrenGithubWebhooksCreateGithubModels < ActiveRecord::Migration[6.1]
       t.string :master_branch
       t.text :description
       t.string :pusher_type
+      t.integer :sender_id, index: true
+      t.string :sender_type
       t.timestamps
     end
 
