@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_22_145315) do
+ActiveRecord::Schema.define(version: 2021_01_23_234019) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -38,6 +38,8 @@ ActiveRecord::Schema.define(version: 2021_01_22_145315) do
   end
 
   create_table "commits", force: :cascade do |t|
+    t.boolean "distinct"
+    t.text "message"
     t.string "url"
     t.string "sha"
     t.string "node_id"
@@ -64,8 +66,8 @@ ActiveRecord::Schema.define(version: 2021_01_22_145315) do
     t.string "master_branch"
     t.text "description"
     t.string "pusher_type"
-    t.integer "sender_id"
-    t.string "sender_type"
+    t.integer "sender_id", null: false
+    t.string "sender_type", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["ref"], name: "index_create_events_on_ref"
@@ -91,9 +93,18 @@ ActiveRecord::Schema.define(version: 2021_01_22_145315) do
     t.index ["node_id"], name: "index_github_users_on_node_id"
   end
 
-  create_table "github_users_memberships", id: false, force: :cascade do |t|
-    t.bigint "membership_id", null: false
-    t.bigint "github_user_id", null: false
+  create_table "github_users_installations", force: :cascade do |t|
+    t.bigint "github_user_id"
+    t.bigint "installation_id"
+    t.index ["github_user_id"], name: "index_github_users_installations_on_github_user_id"
+    t.index ["installation_id"], name: "index_github_users_installations_on_installation_id"
+  end
+
+  create_table "github_users_organizations", force: :cascade do |t|
+    t.bigint "github_user_id"
+    t.bigint "organization_id"
+    t.index ["github_user_id"], name: "index_github_users_organizations_on_github_user_id"
+    t.index ["organization_id"], name: "index_github_users_organizations_on_organization_id"
   end
 
   create_table "github_users_repositories", id: false, force: :cascade do |t|
@@ -232,10 +243,12 @@ ActiveRecord::Schema.define(version: 2021_01_22_145315) do
   end
 
   create_table "memberships", force: :cascade do |t|
+    t.integer "github_user_id"
     t.string "state"
     t.string "role"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["github_user_id"], name: "index_memberships_on_github_user_id"
   end
 
   create_table "memberships_organizations", id: false, force: :cascade do |t|
@@ -305,8 +318,33 @@ ActiveRecord::Schema.define(version: 2021_01_22_145315) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "pull_request_events", force: :cascade do |t|
+    t.string "action"
+    t.integer "number"
+    t.integer "pull_request_id"
+    t.integer "repository_id"
+    t.integer "sender_id"
+    t.string "sender_type"
+    t.integer "installation_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "pull_request_review_comment_events", force: :cascade do |t|
+    t.integer "repository_id"
+    t.integer "pull_request_id"
+    t.integer "review_comment_id"
+    t.string "action"
+    t.integer "sender_id", null: false
+    t.string "sender_type"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["sender_id"], name: "index_pull_request_review_comment_events_on_sender_id"
+  end
+
   create_table "pull_request_review_events", force: :cascade do |t|
     t.integer "repository_id"
+    t.integer "installation_id", null: false
     t.integer "pull_request_id"
     t.integer "review_id"
     t.string "action"
@@ -314,6 +352,7 @@ ActiveRecord::Schema.define(version: 2021_01_22_145315) do
     t.string "sender_type"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["installation_id"], name: "index_pull_request_review_events_on_installation_id"
     t.index ["sender_id"], name: "index_pull_request_review_events_on_sender_id"
   end
 
@@ -342,11 +381,13 @@ ActiveRecord::Schema.define(version: 2021_01_22_145315) do
     t.integer "requested_teams", array: true
     t.json "_links"
     t.string "author_association"
+    t.bigint "repository_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["assignee_id"], name: "index_pull_requests_on_assignee_id"
     t.index ["creator_id"], name: "index_pull_requests_on_creator_id"
     t.index ["node_id"], name: "index_pull_requests_on_node_id"
+    t.index ["repository_id"], name: "index_pull_requests_on_repository_id"
   end
 
   create_table "push_events", force: :cascade do |t|
@@ -359,16 +400,15 @@ ActiveRecord::Schema.define(version: 2021_01_22_145315) do
     t.string "base_ref"
     t.string "compare"
     t.string "head_commit"
-    t.integer "pusher_id"
-    t.string "pusher_type"
+    t.json "pusher"
     t.integer "sender_id"
     t.string "sender_type"
     t.integer "size"
     t.integer "distinct_size"
     t.integer "repository_id"
+    t.string "commits", array: true
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["pusher_id"], name: "index_push_events_on_pusher_id"
     t.index ["sender_id"], name: "index_push_events_on_sender_id"
   end
 
@@ -429,11 +469,13 @@ ActiveRecord::Schema.define(version: 2021_01_22_145315) do
 
   create_table "repository_events", force: :cascade do |t|
     t.integer "repository_id"
+    t.integer "installation_id"
     t.string "action"
     t.integer "sender_id"
     t.string "sender_type"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["installation_id"], name: "index_repository_events_on_installation_id"
     t.index ["sender_id"], name: "index_repository_events_on_sender_id"
   end
 
@@ -444,8 +486,8 @@ ActiveRecord::Schema.define(version: 2021_01_22_145315) do
     t.string "path"
     t.integer "position"
     t.integer "original_position"
-    t.integer "commit_id"
-    t.integer "original_commit_id"
+    t.string "commit_id"
+    t.string "original_commit_id"
     t.integer "in_reply_to_id"
     t.text "body"
     t.string "html_url"
@@ -462,7 +504,7 @@ ActiveRecord::Schema.define(version: 2021_01_22_145315) do
   end
 
   create_table "reviews", force: :cascade do |t|
-    t.integer "commit_id"
+    t.string "commit_id"
     t.integer "github_user_id"
     t.string "node_id"
     t.text "body"
@@ -472,8 +514,10 @@ ActiveRecord::Schema.define(version: 2021_01_22_145315) do
     t.string "pull_request_url"
     t.string "author_association"
     t.json "_links"
+    t.bigint "pull_request_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["pull_request_id"], name: "index_reviews_on_pull_request_id"
   end
 
   create_table "status_events", force: :cascade do |t|
@@ -545,8 +589,11 @@ ActiveRecord::Schema.define(version: 2021_01_22_145315) do
   add_foreign_key "member_events", "repositories"
   add_foreign_key "membership_events", "organizations"
   add_foreign_key "membership_events", "teams"
+  add_foreign_key "memberships", "github_users"
   add_foreign_key "organization_events", "memberships"
   add_foreign_key "organization_events", "organizations"
+  add_foreign_key "pull_request_review_comment_events", "pull_requests"
+  add_foreign_key "pull_request_review_comment_events", "review_comments"
   add_foreign_key "pull_request_review_events", "pull_requests"
   add_foreign_key "pull_request_review_events", "repositories"
   add_foreign_key "pull_request_review_events", "reviews"
@@ -555,7 +602,6 @@ ActiveRecord::Schema.define(version: 2021_01_22_145315) do
   add_foreign_key "repository_events", "repositories"
   add_foreign_key "review_comments", "github_users"
   add_foreign_key "review_comments", "pull_requests"
-  add_foreign_key "reviews", "commits"
   add_foreign_key "reviews", "github_users"
   add_foreign_key "status_events", "commits"
   add_foreign_key "status_events", "repositories"

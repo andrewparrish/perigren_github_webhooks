@@ -22,7 +22,6 @@ class PerigrenGithubWebhooksCreateGithubModels < ActiveRecord::Migration<%= "[#{
       t.integer :open_issues
       t.string :default_branch
       t.string :language
-      t.string :default_branch
       t.string :topics, array: true
       t.datetime :pushed_at
       t.json :permissions
@@ -228,8 +227,6 @@ class PerigrenGithubWebhooksCreateGithubModels < ActiveRecord::Migration<%= "[#{
       t.string :labels_url
       t.integer :number
       t.string :state
-      t.string :title
-      t.text :description
       t.integer :creator_id, index: true
       t.integer :open_issues
       t.integer :closed_issues
@@ -407,7 +404,6 @@ class PerigrenGithubWebhooksCreateGithubModels < ActiveRecord::Migration<%= "[#{
     create_table(:installation_repositories_events) do |t|
       t.integer :installation_id
       t.string :action
-      t.integer :installation_id
       t.integer :repositories_added, array: true
       t.integer :repositories_removed, array: true
       t.integer :account_id, index: true

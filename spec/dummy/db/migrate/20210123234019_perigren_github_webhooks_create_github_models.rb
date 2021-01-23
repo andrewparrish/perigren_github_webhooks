@@ -41,8 +41,8 @@ class PerigrenGithubWebhooksCreateGithubModels < ActiveRecord::Migration[6.1]
       t.string :master_branch
       t.text :description
       t.string :pusher_type
-      t.integer :sender_id, index: true
-      t.string :sender_type
+      t.integer :sender_id, index: true, null: false
+      t.string :sender_type, null: false
       t.timestamps
     end
 
@@ -174,13 +174,14 @@ class PerigrenGithubWebhooksCreateGithubModels < ActiveRecord::Migration[6.1]
     end
 
     create_table(:memberships) do |t|
+      t.integer :github_user_id, index: true
       t.string :state
       t.string :role
       t.timestamps
     end
 
     create_table(:reviews) do |t|
-      t.integer :commit_id
+      t.string :commit_id
       t.integer :github_user_id
       t.string :node_id
       t.text :body
@@ -190,11 +191,13 @@ class PerigrenGithubWebhooksCreateGithubModels < ActiveRecord::Migration[6.1]
       t.string :pull_request_url
       t.string :author_association
       t.json :_links
+      t.bigint :pull_request_id, index: true
       t.timestamps
     end
 
     create_table(:pull_request_review_events) do |t|
       t.integer :repository_id
+      t.integer :installation_id, index: true, null: false
       t.integer :pull_request_id
       t.integer :review_id
       t.string :action
@@ -202,6 +205,18 @@ class PerigrenGithubWebhooksCreateGithubModels < ActiveRecord::Migration[6.1]
       t.string :sender_type
       t.timestamps
     end
+
+    create_table(:pull_request_events) do |t|
+      t.string :action
+      t.integer :number
+      t.integer :pull_request_id
+      t.integer :repository_id
+      t.integer :sender_id
+      t.string :sender_type
+      t.integer :installation_id
+      t.timestamps
+    end
+
 
     create_table(:milestones) do |t|
       t.string :node_id, index: true
@@ -245,6 +260,7 @@ class PerigrenGithubWebhooksCreateGithubModels < ActiveRecord::Migration[6.1]
       t.integer :requested_teams, array: true
       t.json :_links
       t.string :author_association
+      t.bigint :repository_id, index: true
       t.timestamps
     end
 
@@ -255,8 +271,8 @@ class PerigrenGithubWebhooksCreateGithubModels < ActiveRecord::Migration[6.1]
       t.string :path
       t.integer :position
       t.integer :original_position
-      t.integer :commit_id, index: true
-      t.integer :original_commit_id, index: true
+      t.string :commit_id, index: true
+      t.string :original_commit_id, index: true
       t.integer :in_reply_to_id, index: true
       t.text :body
       t.string :html_url
@@ -287,18 +303,19 @@ class PerigrenGithubWebhooksCreateGithubModels < ActiveRecord::Migration[6.1]
       t.string :base_ref
       t.string :compare
       t.string :head_commit
-      t.integer :pusher_id, index: true
-      t.string :pusher_type
+      t.json :pusher
       t.integer :sender_id, index: true
       t.string :sender_type
       t.integer :size
       t.integer :distinct_size
       t.integer :repository_id
+      t.string :commits, array: true
       t.timestamps
     end
 
     create_table(:repository_events) do |t|
       t.integer :repository_id
+      t.integer :installation_id, index: true
       t.string :action
       t.integer :sender_id, index: true
       t.string :sender_type
@@ -361,6 +378,17 @@ class PerigrenGithubWebhooksCreateGithubModels < ActiveRecord::Migration[6.1]
       t.timestamps
     end
 
+    create_table(:github_users_organizations) do |t|
+      t.bigint :github_user_id, index: true
+      t.bigint :organization_id, index: true
+    end
+
+
+    create_table(:github_users_installations) do |t|
+      t.bigint :github_user_id, index: true
+      t.bigint :installation_id, index: true
+    end
+
     create_table(:plans) do |t|
       t.string :name
       t.string :description
@@ -393,6 +421,8 @@ class PerigrenGithubWebhooksCreateGithubModels < ActiveRecord::Migration[6.1]
     end
 
     create_table(:commits) do |t|
+      t.boolean :distinct
+      t.text :message
       t.string :url
       t.string :sha
       t.string :node_id, index: true
@@ -403,6 +433,17 @@ class PerigrenGithubWebhooksCreateGithubModels < ActiveRecord::Migration[6.1]
       t.string :committer_type
       t.string :parents, array: true
     end
+    
+    create_table(:pull_request_review_comment_events) do |t|
+      t.integer :repository_id
+      t.integer :pull_request_id
+      t.integer :review_comment_id
+      t.string :action
+      t.integer :sender_id, index: true, null: false
+      t.string :sender_type
+      t.timestamps
+    end
+
 
     add_foreign_key :create_events, :repositories
     add_foreign_key :commit_comment_events, :repository_comments
@@ -413,15 +454,17 @@ class PerigrenGithubWebhooksCreateGithubModels < ActiveRecord::Migration[6.1]
     add_foreign_key :marketplace_purchases, :plans
     add_foreign_key :teams, :organizations
     add_foreign_key :member_events, :repositories
+    add_foreign_key :memberships, :github_users
     add_foreign_key :membership_events, :organizations
     add_foreign_key :membership_events, :teams
     add_foreign_key :organization_events, :organizations
     add_foreign_key :organization_events, :memberships
     add_foreign_key :reviews, :github_users
-    add_foreign_key :reviews, :commits
     add_foreign_key :pull_request_review_events, :reviews
     add_foreign_key :pull_request_review_events, :pull_requests
     add_foreign_key :pull_request_review_events, :repositories
+    add_foreign_key :pull_request_review_comment_events, :pull_requests
+    add_foreign_key :pull_request_review_comment_events, :review_comments
     add_foreign_key :pull_requests, :github_users, column: :assignee_id
     add_foreign_key :review_comments, :pull_requests
     add_foreign_key :review_comments, :github_users
@@ -440,7 +483,6 @@ class PerigrenGithubWebhooksCreateGithubModels < ActiveRecord::Migration[6.1]
     create_join_table :installations, :repositories
     create_join_table :installation_events, :repositories
     create_join_table :memberships, :organizations
-    create_join_table :memberships, :github_users
     create_join_table :commits, :push_events
     create_join_table :branches, :status_events
     create_join_table :repositories, :github_users
