@@ -1,6 +1,6 @@
 require 'perigren_github_webhooks'
 
-RSpec.describe PerigrenGithubWebhooks::Handlers::InstallationEventService, type: :service do
+RSpec.describe PerigrenGithubWebhooks::InstallationEventService, type: :service do
   let(:test_event_data) { JSON.parse(File.read('spec/test_data/webhooks/event-installation-created.json')) }
   let(:test_org_data) { JSON.parse(File.read('spec/test_data/webhooks/event-organization-installation.json')) }
   let(:test_delete_data) { JSON.parse(File.read('spec/test_data/webhooks/event-installation-deleted.json')) }

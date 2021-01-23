@@ -150,6 +150,9 @@ ActiveRecord::Schema.define(version: 2021_01_22_145315) do
     t.json "permissions"
     t.string "events", array: true
     t.string "single_file_name"
+    t.boolean "deleted", default: false
+    t.integer "deleted_event_id"
+    t.integer "installer_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["account_id"], name: "index_installations_on_account_id"

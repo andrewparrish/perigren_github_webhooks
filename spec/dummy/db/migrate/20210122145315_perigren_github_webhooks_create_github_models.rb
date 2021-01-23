@@ -80,6 +80,9 @@ class PerigrenGithubWebhooksCreateGithubModels < ActiveRecord::Migration[6.1]
       t.json :permissions
       t.string :events, array: true
       t.string :single_file_name
+      t.boolean :deleted, default: false
+      t.integer :deleted_event_id
+      t.integer :installer_id
       t.timestamps
     end
 
