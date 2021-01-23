@@ -8,6 +8,7 @@ group :development do
   gem 'sqlite3'
   gem 'pry', '~> 0.13.1'
   gem 'rspec-rails', '~> 4.0.2'
+  gem 'pg'
 end
 
 group :test do
