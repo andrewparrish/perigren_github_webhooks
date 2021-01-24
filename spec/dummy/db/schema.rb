@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_23_234019) do
+ActiveRecord::Schema.define(version: 2021_01_24_194558) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -218,7 +218,7 @@ ActiveRecord::Schema.define(version: 2021_01_23_234019) do
     t.string "action"
     t.integer "member_id"
     t.string "member_type"
-    t.json "changes"
+    t.json "event_changes"
     t.integer "sender_id"
     t.string "sender_type"
     t.datetime "created_at", precision: 6, null: false

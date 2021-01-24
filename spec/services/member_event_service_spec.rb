@@ -1,6 +1,6 @@
-require 'perigren_github_webhooks'
+require 'rails_helper'
 
-RSpec.describe PerigrenGithubWebhooks::Handlers::MemberEventService, type: :service do
+RSpec.describe PerigrenGithubWebhooks::MemberEventService, type: :service do
   let(:test_data) { JSON.parse(File.read('spec/test_data/webhooks/event-member.json')) }
 
   describe '#perform' do
@@ -18,19 +18,19 @@ RSpec.describe PerigrenGithubWebhooks::Handlers::MemberEventService, type: :serv
     end
 
     it 'creates the member' do
-      user = GithubUser.find(583231)
+      user = PerigrenGithubWebhooks::GithubUser.find(583231)
       expect(user.login).to eq 'octocat'
       expect(user.node_id).to eq test_data['member']['node_id']
     end
 
     it 'creates the repository' do
-      repo = Repository.find(135493233)
+      repo = PerigrenGithubWebhooks::Repository.find(135493233)
       expect(repo.node_id).to eq test_data['repository']['node_id']
       expect(repo.owner_id).to eq test_data['repository']['owner']['id']
     end
 
     it 'creates the sender' do
-      user = GithubUser.find(21031067)
+      user = PerigrenGithubWebhooks::GithubUser.find(21031067)
       expect(user.login).to eq 'Codertocat'
     end
   end
