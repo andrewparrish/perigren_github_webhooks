@@ -23,7 +23,7 @@ module PerigrenGithubWebhooks
       create_creator
       pr_data['repository_id'] = @repo.id
       @pr = PullRequest.find_or_initialize_by(id: pr_data['id'])
-      @pr.update(clean_data(pr_data, PullRequest, ['head', 'base', '_links']).merge(pull_request_data.merge(last_touched_at: Time.now)))
+      @pr.update(clean_data(pr_data, PullRequest, ['head', 'base', '_links']).merge(pull_request_data))
       @pr
     end
 
