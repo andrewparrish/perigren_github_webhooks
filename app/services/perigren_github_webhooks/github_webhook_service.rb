@@ -75,7 +75,6 @@ module PerigrenGithubWebhooks
         installation.id = installation_data['id']
         installation.permissions = installation_data['permissions']
         installation.save
-        installation.installation_setting = InstallationSetting.create(installation_id: installation.id)
       end
     end
 

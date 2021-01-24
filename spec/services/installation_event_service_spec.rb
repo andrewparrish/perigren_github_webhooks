@@ -1,3 +1,4 @@
+require 'rails_helper'
 require 'perigren_github_webhooks'
 
 RSpec.describe PerigrenGithubWebhooks::InstallationEventService, type: :service do
@@ -7,15 +8,15 @@ RSpec.describe PerigrenGithubWebhooks::InstallationEventService, type: :service 
   let(:user_id) { test_event_data['installation']['account']['id'] }
 
   describe '#perform' do
-    describe 'organization installation created' do
-      let(:installation_id) { test_org_data['installation']['id'] }
-      let(:org_id) { test_org_data['installation']['account']['id'] }
+    #describe 'organization installation created' do
+    #  let(:installation_id) { test_org_data['installation']['id'] }
+    #  let(:org_id) { test_org_data['installation']['account']['id'] }
 
-      it 'calls the SynchronizeOrganizationWorker' do
-        expect(SynchronizeOrganizationWorker).to receive(:perform_async).with(installation_id, org_id)
-        described_class.new(test_org_data).perform
-      end
-    end
+    #  it 'calls the SynchronizeOrganizationWorker' do
+    #    expect(SynchronizeOrganizationWorker).to receive(:perform_async).with(installation_id, org_id)
+    #    described_class.new(test_org_data).perform
+    #  end
+    #end
 
     describe 'created' do
       event = nil
@@ -29,41 +30,36 @@ RSpec.describe PerigrenGithubWebhooks::InstallationEventService, type: :service 
       end
 
       it 'creates the installation for the event' do
-        installation = Installation.find(135043)
-        expect(installation.account_type).to eq 'GithubUser'
+        installation = PerigrenGithubWebhooks::Installation.find(135043)
+        expect(installation.account_type).to eq 'PerigrenGithubWebhooks::GithubUser'
         expect(installation.events).to eq test_event_data['installation']['events']
         expect(installation.app_id).to eq test_event_data['installation']['app_id']
         expect(installation.installer_id).to eq test_event_data['sender']['id']
       end
 
       it 'creates a GithubUser for the installation' do
-        user = GithubUser.find(user_id)
+        user = PerigrenGithubWebhooks::GithubUser.find(user_id)
         expect(user.login).to eq 'andrewparrish'
       end
 
       it 'creates a repository for the event' do
-        repo = Repository.find(121716388)
+        repo = PerigrenGithubWebhooks::Repository.find(121716388)
         expect(repo.name).to eq 'in-the-eleven'
       end
       
       it 'creates the installation repository record' do
-        assoc = InstallationsRepository.find_by(installation_id: 135043, repository_id:  121716388)
+        assoc = PerigrenGithubWebhooks::InstallationsRepository.find_by(installation_id: 135043, repository_id:  121716388)
         expect(assoc).not_to be_nil
       end
 
       it 'creates a sender for the event' do
         expect(event.sender_id).to eq user_id
-        expect(event.sender_type).to eq 'GithubUser'
+        expect(event.sender_type).to eq 'PerigrenGithubWebhooks::GithubUser'
       end
 
       it 'creates a github_user_installations record' do
-        assoc = GithubUsersInstallations.find_by(github_user_id: user_id, installation_id: test_event_data['installation']['id'])
+        assoc = PerigrenGithubWebhooks::GithubUsersInstallations.find_by(github_user_id: user_id, installation_id: test_event_data['installation']['id'])
         expect(assoc).not_to be_nil
-      end
-
-      it 'creates an installation setting for the installation' do
-        setting = Installation.find(135043).installation_setting
-        expect(setting.hours_stale).to eq 24 
       end
     end
 
@@ -79,7 +75,7 @@ RSpec.describe PerigrenGithubWebhooks::InstallationEventService, type: :service 
       end
 
       it 'sets the installation as deleted' do
-        installation = Installation.find(135043)
+        installation = PerigrenGithubWebhooks::Installation.find(135043)
         expect(installation.deleted).to be_truthy
         expect(installation.deleted_event_id).to eq event.id
       end
