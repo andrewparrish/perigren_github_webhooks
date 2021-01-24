@@ -1,5 +1,3 @@
-require 'pry'
-
 module PerigrenGithubWebhooks
   class GithubWebhookService
     def initialize(data)
@@ -11,8 +9,9 @@ module PerigrenGithubWebhooks
     end
 
     def create_user(user_data)
+      user_klass = user_data['type'].constantize rescue nil
       # TODO: Configurable overwrite on user class
-      user_klass = PerigrenGithubWebhooks.user_class || GithubUser
+      user_klass ||= PerigrenGithubWebhooks.user_class || GithubUser
       user = user_klass.find_or_initialize_by(id: user_data['id'])
       user.update(user_data.select do |k, _v|
         user_klass.column_names.include?(k) &&  k != 'type'
@@ -64,7 +63,7 @@ module PerigrenGithubWebhooks
     end
 
     def organization_creation
-      @organization = create_user(@data['organization'].merge('type' => 'Organization'))
+      @organization = create_user(@data['organization'].merge('type' => 'PerigrenGithubWebhooks::Organization'))
     end
 
     def create_installation(installation_data)

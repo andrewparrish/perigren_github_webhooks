@@ -7,8 +7,9 @@ module PerigrenGithubWebhooks
         organization_creation
         event = event_creation
         association_creation
-        SynchronizeOrganizationWorker.perform_async(@data['installation']['id'],
-                                                    @organization.id)
+        # TODO: async processes
+        #SynchronizeOrganizationWorker.perform_async(@data['installation']['id'],
+        #                                           @organization.id)
 
         event
       end
