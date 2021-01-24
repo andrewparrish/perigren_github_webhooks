@@ -1,3 +1,0 @@
-class Membership < ApplicationRecord
-
-end
