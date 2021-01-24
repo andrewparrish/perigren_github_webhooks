@@ -1,3 +1,0 @@
-class MembershipsTeam < ApplicationRecord
-
-end
