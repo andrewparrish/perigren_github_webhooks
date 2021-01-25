@@ -11,7 +11,7 @@ RSpec.describe PerigrenGithubWebhooks::TeamAddEventService, type: :service do
     end
 
     it 'creates the team add event model' do
-      expect(event.team_id).to eq test_data['team']['id']
+      expect(event.perigren_team_id).to eq test_data['team']['id']
       expect(event.sender_id).to eq test_data['sender']['id']
       expect(event.sender_type).to eq 'PerigrenGithubWebhooks::Organization'
     end
@@ -29,7 +29,7 @@ RSpec.describe PerigrenGithubWebhooks::TeamAddEventService, type: :service do
     it 'creates the team' do
       team = PerigrenGithubWebhooks::Team.find(test_data['team']['id'])
       expect(team.name).to eq 'github'
-      expect(team.organization_id).to eq test_data['team']['organization_id']
+      expect(team.perigren_organization_id).to eq test_data['team']['perigren_organization_id']
     end
   end
 end

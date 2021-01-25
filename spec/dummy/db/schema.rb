@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_25_015916) do
+ActiveRecord::Schema.define(version: 2021_01_25_022243) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,9 +21,9 @@ ActiveRecord::Schema.define(version: 2021_01_25_015916) do
     t.index ["commit_sha"], name: "index_branches_on_commit_sha"
   end
 
-  create_table "branches_status_events", id: false, force: :cascade do |t|
+  create_table "branches_perigren_status_events", id: false, force: :cascade do |t|
     t.bigint "branch_id", null: false
-    t.bigint "status_event_id", null: false
+    t.bigint "perigren_status_event_id", null: false
   end
 
   create_table "commit_comment_events", force: :cascade do |t|
@@ -35,28 +35,6 @@ ActiveRecord::Schema.define(version: 2021_01_25_015916) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["sender_id"], name: "index_commit_comment_events_on_sender_id"
-  end
-
-  create_table "commits", force: :cascade do |t|
-    t.boolean "distinct"
-    t.text "message"
-    t.string "url"
-    t.string "sha"
-    t.string "node_id"
-    t.json "commit"
-    t.integer "author_id"
-    t.string "author_type"
-    t.integer "committer_id"
-    t.string "committer_type"
-    t.string "parents", array: true
-    t.index ["author_id"], name: "index_commits_on_author_id"
-    t.index ["committer_id"], name: "index_commits_on_committer_id"
-    t.index ["node_id"], name: "index_commits_on_node_id"
-  end
-
-  create_table "commits_push_events", id: false, force: :cascade do |t|
-    t.bigint "commit_id", null: false
-    t.bigint "push_event_id", null: false
   end
 
   create_table "create_events", force: :cascade do |t|
@@ -191,7 +169,7 @@ ActiveRecord::Schema.define(version: 2021_01_25_015916) do
 
   create_table "membership_events", force: :cascade do |t|
     t.integer "perigren_organization_id"
-    t.integer "team_id"
+    t.integer "perigren_team_id"
     t.string "action"
     t.string "scope"
     t.string "member_id"
@@ -259,6 +237,28 @@ ActiveRecord::Schema.define(version: 2021_01_25_015916) do
     t.index ["sender_id"], name: "index_organization_events_on_sender_id"
   end
 
+  create_table "perigren_commits", force: :cascade do |t|
+    t.boolean "distinct"
+    t.text "message"
+    t.string "url"
+    t.string "sha"
+    t.string "node_id"
+    t.json "commit"
+    t.integer "author_id"
+    t.string "author_type"
+    t.integer "committer_id"
+    t.string "committer_type"
+    t.string "parents", array: true
+    t.index ["author_id"], name: "index_perigren_commits_on_author_id"
+    t.index ["committer_id"], name: "index_perigren_commits_on_committer_id"
+    t.index ["node_id"], name: "index_perigren_commits_on_node_id"
+  end
+
+  create_table "perigren_commits_push_events", id: false, force: :cascade do |t|
+    t.bigint "perigren_commit_id", null: false
+    t.bigint "perigren_push_event_id", null: false
+  end
+
   create_table "perigren_github_users", force: :cascade do |t|
     t.string "login"
     t.string "node_id"
@@ -305,6 +305,28 @@ ActiveRecord::Schema.define(version: 2021_01_25_015916) do
     t.index ["node_id"], name: "index_perigren_organizations_on_node_id"
   end
 
+  create_table "perigren_push_events", force: :cascade do |t|
+    t.string "ref"
+    t.string "before"
+    t.string "after"
+    t.boolean "created"
+    t.boolean "deleted"
+    t.boolean "forced"
+    t.string "base_ref"
+    t.string "compare"
+    t.string "head_commit"
+    t.json "pusher"
+    t.integer "sender_id"
+    t.string "sender_type"
+    t.integer "size"
+    t.integer "distinct_size"
+    t.integer "perigren_repository_id"
+    t.string "commits", array: true
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["sender_id"], name: "index_perigren_push_events_on_sender_id"
+  end
+
   create_table "perigren_repositories", force: :cascade do |t|
     t.string "node_id"
     t.string "name"
@@ -340,6 +362,76 @@ ActiveRecord::Schema.define(version: 2021_01_25_015916) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["node_id"], name: "index_perigren_repositories_on_node_id"
     t.index ["owner_id"], name: "index_perigren_repositories_on_owner_id"
+  end
+
+  create_table "perigren_repository_events", force: :cascade do |t|
+    t.integer "perigren_repository_id"
+    t.integer "installation_id"
+    t.string "action"
+    t.integer "sender_id"
+    t.string "sender_type"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["installation_id"], name: "index_perigren_repository_events_on_installation_id"
+    t.index ["sender_id"], name: "index_perigren_repository_events_on_sender_id"
+  end
+
+  create_table "perigren_status_events", force: :cascade do |t|
+    t.integer "perigren_repository_id"
+    t.integer "perigren_commit_id"
+    t.string "sha"
+    t.string "name"
+    t.string "target_url"
+    t.string "context"
+    t.text "description"
+    t.string "state"
+    t.integer "sender_id"
+    t.string "sender_type"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["sender_id"], name: "index_perigren_status_events_on_sender_id"
+  end
+
+  create_table "perigren_team_add_events", force: :cascade do |t|
+    t.integer "perigren_repository_id"
+    t.integer "perigren_organization_id"
+    t.integer "perigren_team_id"
+    t.integer "sender_id"
+    t.string "sender_type"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["sender_id"], name: "index_perigren_team_add_events_on_sender_id"
+  end
+
+  create_table "perigren_team_events", force: :cascade do |t|
+    t.integer "perigren_organization_id"
+    t.integer "perigren_repository_id"
+    t.integer "perigren_team_id"
+    t.string "action"
+    t.integer "sender_id"
+    t.string "sender_type"
+    t.json "event_changes"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["sender_id"], name: "index_perigren_team_events_on_sender_id"
+  end
+
+  create_table "perigren_teams", force: :cascade do |t|
+    t.integer "perigren_organization_id"
+    t.string "login"
+    t.string "node_id"
+    t.string "avatar_url"
+    t.boolean "site_admin"
+    t.string "type"
+    t.string "organization_billing_email"
+    t.string "name"
+    t.string "slug"
+    t.string "description"
+    t.string "privacy"
+    t.string "permission"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["node_id"], name: "index_perigren_teams_on_node_id"
   end
 
   create_table "plans", force: :cascade do |t|
@@ -415,7 +507,7 @@ ActiveRecord::Schema.define(version: 2021_01_25_015916) do
     t.integer "creator_id"
     t.string "creator_type"
     t.integer "requested_reviewers", array: true
-    t.integer "requested_teams", array: true
+    t.integer "requested_perigren_teams", array: true
     t.json "_links"
     t.string "author_association"
     t.bigint "perigren_repository_id"
@@ -427,28 +519,6 @@ ActiveRecord::Schema.define(version: 2021_01_25_015916) do
     t.index ["perigren_repository_id"], name: "index_pull_requests_on_perigren_repository_id"
   end
 
-  create_table "push_events", force: :cascade do |t|
-    t.string "ref"
-    t.string "before"
-    t.string "after"
-    t.boolean "created"
-    t.boolean "deleted"
-    t.boolean "forced"
-    t.string "base_ref"
-    t.string "compare"
-    t.string "head_commit"
-    t.json "pusher"
-    t.integer "sender_id"
-    t.string "sender_type"
-    t.integer "size"
-    t.integer "distinct_size"
-    t.integer "perigren_repository_id"
-    t.string "commits", array: true
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["sender_id"], name: "index_push_events_on_sender_id"
-  end
-
   create_table "repository_comments", force: :cascade do |t|
     t.string "url"
     t.string "html_url"
@@ -458,25 +528,13 @@ ActiveRecord::Schema.define(version: 2021_01_25_015916) do
     t.integer "position"
     t.integer "line"
     t.string "path"
-    t.string "commit_id"
+    t.string "perigren_commit_id"
     t.string "author_association"
     t.text "body"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["node_id"], name: "index_repository_comments_on_node_id"
     t.index ["owner_id"], name: "index_repository_comments_on_owner_id"
-  end
-
-  create_table "repository_events", force: :cascade do |t|
-    t.integer "perigren_repository_id"
-    t.integer "installation_id"
-    t.string "action"
-    t.integer "sender_id"
-    t.string "sender_type"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["installation_id"], name: "index_repository_events_on_installation_id"
-    t.index ["sender_id"], name: "index_repository_events_on_sender_id"
   end
 
   create_table "review_comments", force: :cascade do |t|
@@ -486,8 +544,8 @@ ActiveRecord::Schema.define(version: 2021_01_25_015916) do
     t.string "path"
     t.integer "position"
     t.integer "original_position"
-    t.string "commit_id"
-    t.string "original_commit_id"
+    t.string "perigren_commit_id"
+    t.string "original_perigren_commit_id"
     t.integer "in_reply_to_id"
     t.text "body"
     t.string "html_url"
@@ -497,14 +555,14 @@ ActiveRecord::Schema.define(version: 2021_01_25_015916) do
     t.integer "perigren_github_user_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["commit_id"], name: "index_review_comments_on_commit_id"
     t.index ["in_reply_to_id"], name: "index_review_comments_on_in_reply_to_id"
     t.index ["node_id"], name: "index_review_comments_on_node_id"
-    t.index ["original_commit_id"], name: "index_review_comments_on_original_commit_id"
+    t.index ["original_perigren_commit_id"], name: "index_review_comments_on_original_perigren_commit_id"
+    t.index ["perigren_commit_id"], name: "index_review_comments_on_perigren_commit_id"
   end
 
   create_table "reviews", force: :cascade do |t|
-    t.string "commit_id"
+    t.string "perigren_commit_id"
     t.integer "perigren_github_user_id"
     t.string "node_id"
     t.text "body"
@@ -520,64 +578,6 @@ ActiveRecord::Schema.define(version: 2021_01_25_015916) do
     t.index ["pull_request_id"], name: "index_reviews_on_pull_request_id"
   end
 
-  create_table "status_events", force: :cascade do |t|
-    t.integer "perigren_repository_id"
-    t.integer "commit_id"
-    t.string "sha"
-    t.string "name"
-    t.string "target_url"
-    t.string "context"
-    t.text "description"
-    t.string "state"
-    t.integer "sender_id"
-    t.string "sender_type"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["sender_id"], name: "index_status_events_on_sender_id"
-  end
-
-  create_table "team_add_events", force: :cascade do |t|
-    t.integer "perigren_repository_id"
-    t.integer "perigren_organization_id"
-    t.integer "team_id"
-    t.integer "sender_id"
-    t.string "sender_type"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["sender_id"], name: "index_team_add_events_on_sender_id"
-  end
-
-  create_table "team_events", force: :cascade do |t|
-    t.integer "perigren_organization_id"
-    t.integer "perigren_repository_id"
-    t.integer "team_id"
-    t.string "action"
-    t.integer "sender_id"
-    t.string "sender_type"
-    t.json "event_changes"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["sender_id"], name: "index_team_events_on_sender_id"
-  end
-
-  create_table "teams", force: :cascade do |t|
-    t.integer "perigren_organization_id"
-    t.string "login"
-    t.string "node_id"
-    t.string "avatar_url"
-    t.boolean "site_admin"
-    t.string "type"
-    t.string "organization_billing_email"
-    t.string "name"
-    t.string "slug"
-    t.string "description"
-    t.string "privacy"
-    t.string "permission"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["node_id"], name: "index_teams_on_node_id"
-  end
-
   add_foreign_key "commit_comment_events", "perigren_repositories"
   add_foreign_key "commit_comment_events", "repository_comments"
   add_foreign_key "create_events", "perigren_repositories"
@@ -588,28 +588,28 @@ ActiveRecord::Schema.define(version: 2021_01_25_015916) do
   add_foreign_key "marketplace_purchases", "plans"
   add_foreign_key "member_events", "perigren_repositories"
   add_foreign_key "membership_events", "perigren_organizations"
-  add_foreign_key "membership_events", "teams"
+  add_foreign_key "membership_events", "perigren_teams"
   add_foreign_key "memberships", "perigren_github_users"
   add_foreign_key "organization_events", "memberships"
   add_foreign_key "organization_events", "perigren_organizations"
+  add_foreign_key "perigren_push_events", "perigren_repositories"
+  add_foreign_key "perigren_repository_events", "perigren_repositories"
+  add_foreign_key "perigren_status_events", "perigren_commits"
+  add_foreign_key "perigren_status_events", "perigren_repositories"
+  add_foreign_key "perigren_team_add_events", "perigren_organizations"
+  add_foreign_key "perigren_team_add_events", "perigren_repositories"
+  add_foreign_key "perigren_team_add_events", "perigren_teams"
+  add_foreign_key "perigren_team_events", "perigren_organizations"
+  add_foreign_key "perigren_team_events", "perigren_repositories"
+  add_foreign_key "perigren_team_events", "perigren_teams"
+  add_foreign_key "perigren_teams", "perigren_organizations"
   add_foreign_key "pull_request_review_comment_events", "pull_requests"
   add_foreign_key "pull_request_review_comment_events", "review_comments"
   add_foreign_key "pull_request_review_events", "perigren_repositories"
   add_foreign_key "pull_request_review_events", "pull_requests"
   add_foreign_key "pull_request_review_events", "reviews"
   add_foreign_key "pull_requests", "perigren_github_users", column: "assignee_id"
-  add_foreign_key "push_events", "perigren_repositories"
-  add_foreign_key "repository_events", "perigren_repositories"
   add_foreign_key "review_comments", "perigren_github_users"
   add_foreign_key "review_comments", "pull_requests"
   add_foreign_key "reviews", "perigren_github_users"
-  add_foreign_key "status_events", "commits"
-  add_foreign_key "status_events", "perigren_repositories"
-  add_foreign_key "team_add_events", "perigren_organizations"
-  add_foreign_key "team_add_events", "perigren_repositories"
-  add_foreign_key "team_add_events", "teams"
-  add_foreign_key "team_events", "perigren_organizations"
-  add_foreign_key "team_events", "perigren_repositories"
-  add_foreign_key "team_events", "teams"
-  add_foreign_key "teams", "perigren_organizations"
 end

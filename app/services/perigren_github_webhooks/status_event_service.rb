@@ -15,7 +15,7 @@ module PerigrenGithubWebhooks
         target_url: @data['target_url'],
         context: @data['context'],
         description: @data['description'],
-        commit_id: @commit.id,
+        perigren_commit_id: @commit.id,
         sender: @sender
       )
       event.update(id: @data['id'])

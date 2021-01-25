@@ -11,9 +11,9 @@ module PerigrenGithubWebhooks
     def create_event
       TeamAddEvent.create(
         sender: @sender,
-        repository_id: @repo.id,
-        team_id: @team.id,
-        organization_id: @organization.id
+        perigren_repository_id: @repo.id,
+        perigren_team_id: @team.id,
+        perigren_organization_id: @organization.id
       )
     end
   end
