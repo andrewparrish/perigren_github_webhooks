@@ -13,6 +13,7 @@ module PerigrenGithubWebhooks
       user_data['type'] = 'PerigrenGithubWebhooks::Organization' if user_data['type'] == 'Organization'
       user_klass = user_data['type'].constantize rescue nil
       # TODO: Configurable overwrite on user class
+      # TODO: This is definitely wrong
       user_klass ||= PerigrenGithubWebhooks.user_class || GithubUser
       user = user_klass.find_or_initialize_by(id: user_data['id'])
       user.update(user_data.select do |k, _v|

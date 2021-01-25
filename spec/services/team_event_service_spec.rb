@@ -1,7 +1,6 @@
-require 'spec_helper'
-require 'perigren_github_webhooks'
+require 'rails_helper'
 
-RSpec.describe PerigrenGithubWebhooks::Handlers::TeamEventService, type: :service do
+RSpec.describe PerigrenGithubWebhooks::TeamEventService, type: :service do
   let(:test_data) { JSON.parse(File.read('spec/test_data/webhooks/event-team.json')) }
 
   describe '#perform' do
@@ -16,22 +15,22 @@ RSpec.describe PerigrenGithubWebhooks::Handlers::TeamEventService, type: :servic
     end
 
     it 'creates the repository for the event' do
-      repo = Repository.find(135493281)
+      repo = PerigrenGithubWebhooks::Repository.find(135493281)
       expect(repo.node_id).to eq test_data['repository']['node_id']
     end
 
     it 'creates the organization' do
-      org = Organization.find(38302899)
+      org = PerigrenGithubWebhooks::Organization.find(38302899)
       expect(org.login).to eq 'Octocoders'
     end
 
     it 'creates the team' do
-      team = Team.find(2723476)
+      team = PerigrenGithubWebhooks::Team.find(2723476)
       expect(team.name).to eq 'github'
     end
 
     it 'creates the sender' do
-      user = GithubUser.find(test_data['sender']['id'])
+      user = PerigrenGithubWebhooks::GithubUser.find(test_data['sender']['id'])
       expect(user.login).to eq 'Codertocat'
     end
   end

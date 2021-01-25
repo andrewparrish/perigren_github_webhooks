@@ -348,7 +348,7 @@ class PerigrenGithubWebhooksCreateGithubModels < ActiveRecord::Migration[6.1]
       t.string :action
       t.integer :sender_id, index: true
       t.string :sender_type
-      t.json :changes
+      t.json :event_changes
       t.timestamps
     end
 

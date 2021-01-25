@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_24_194558) do
+ActiveRecord::Schema.define(version: 2021_01_25_010533) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -554,7 +554,7 @@ ActiveRecord::Schema.define(version: 2021_01_24_194558) do
     t.string "action"
     t.integer "sender_id"
     t.string "sender_type"
-    t.json "changes"
+    t.json "event_changes"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["sender_id"], name: "index_team_events_on_sender_id"
