@@ -1,6 +1,6 @@
-require 'perigren_github_webhooks'
+require 'rails_helper'
 
-RSpec.describe PerigrenGithubWebhooks::Handlers::PushEventService, type: :service do
+RSpec.describe PerigrenGithubWebhooks::PushEventService, type: :service do
   let(:test_data) { JSON.parse(File.read('spec/test_data/webhooks/event-push.json')) }
 
 
@@ -19,13 +19,13 @@ RSpec.describe PerigrenGithubWebhooks::Handlers::PushEventService, type: :servic
     end
 
     it 'creates the repository' do
-      repo = Repository.find(test_data['repository']['id'])
+      repo = PerigrenGithubWebhooks::Repository.find(test_data['repository']['id'])
       expect(repo.node_id).to eq test_data['repository']['node_id'] 
       expect(repo.name).to eq 'Hello-World'
     end
 
     it 'creates the sender' do
-      user = GithubUser.find(test_data['sender']['id'])
+      user = PerigrenGithubWebhooks::GithubUser.find(test_data['sender']['id'])
       expect(user.login).to eq 'Codertocat'
       expect(user.node_id).to eq test_data['sender']['node_id']
     end

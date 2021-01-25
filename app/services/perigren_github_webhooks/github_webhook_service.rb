@@ -9,6 +9,8 @@ module PerigrenGithubWebhooks
     end
 
     def create_user(user_data)
+      # TODO: Clean this up
+      user_data['type'] = 'PerigrenGithubWebhooks::Organization' if user_data['type'] == 'Organization'
       user_klass = user_data['type'].constantize rescue nil
       # TODO: Configurable overwrite on user class
       user_klass ||= PerigrenGithubWebhooks.user_class || GithubUser

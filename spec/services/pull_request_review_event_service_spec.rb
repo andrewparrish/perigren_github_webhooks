@@ -1,6 +1,6 @@
 require 'perigren_github_webhooks'
 
-RSpec.describe PerigrenGithubWebhooks::Handlers::PullRequestReviewEventService, type: :service do
+RSpec.describe PerigrenGithubWebhooks::PullRequestReviewEventService, type: :service do
 
   let(:test_data) { JSON.parse(File.read('spec/test_data/webhooks/event-pull-request-review-submitted.json')) }
   
@@ -18,25 +18,24 @@ RSpec.describe PerigrenGithubWebhooks::Handlers::PullRequestReviewEventService, 
     end
 
     it 'creates the review model' do
-      review = Review.find(test_data['review']['id'])
+      review = PerigrenGithubWebhooks::Review.find(test_data['review']['id'])
       expect(review.node_id).to eq test_data['review']['node_id']
       expect(review.pull_request_id).to eq test_data['pull_request']['id']
     end
 
     it 'creates the sender model' do
-      user = GithubUser.find(test_data['sender']['id'])
+      user = PerigrenGithubWebhooks::GithubUser.find(test_data['sender']['id'])
       expect(user.login).to eq 'andrewparrish'
       expect(user.node_id).to eq test_data['sender']['node_id']
     end
 
     it 'creates the pull request model' do
-      pr = PullRequest.find(test_data['pull_request']['id'])
+      pr = PerigrenGithubWebhooks::PullRequest.find(test_data['pull_request']['id'])
       expect(pr.node_id).to eq test_data['pull_request']['node_id']
-      expect(pr.last_touched_at).not_to be_nil
     end
 
     it 'createst he repository model' do
-      repo = Repository.find(test_data['repository']['id'])
+      repo = PerigrenGithubWebhooks::Repository.find(test_data['repository']['id'])
       expect(repo.node_id).to eq test_data['repository']['node_id']
     end
   end

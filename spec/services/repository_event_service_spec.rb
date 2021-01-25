@@ -1,6 +1,6 @@
 require 'perigren_github_webhooks'
 
-RSpec.describe PerigrenGithubWebhooks::Handlers::RepositoryEventService, type: :service do
+RSpec.describe PerigrenGithubWebhooks::RepositoryEventService, type: :service do
   let(:test_data) { JSON.parse(File.read('spec/test_data/webhooks/event-repository-created.json')) }
 
   describe '#perform' do
@@ -16,7 +16,7 @@ RSpec.describe PerigrenGithubWebhooks::Handlers::RepositoryEventService, type: :
     end
 
     it 'creates the repo' do
-      repo = Repository.find(test_data['repository']['id'])
+      repo = PerigrenGithubWebhooks::Repository.find(test_data['repository']['id'])
       expect(repo.name).to eq 'webhooks-test-server'
     end
   end
