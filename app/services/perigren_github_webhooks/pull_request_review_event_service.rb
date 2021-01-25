@@ -19,7 +19,7 @@ module PerigrenGithubWebhooks
 
     def create_review(review_data)
       review_data['github_user_id'] = @user.id 
-      review_data['pull_request_id'] = @pr.id
+      review_data['perigren_pull_request_id'] = @pr.id
       @review = Review.find_or_create_by(
         clean_data(review_data, Review, ['_links'])
       )

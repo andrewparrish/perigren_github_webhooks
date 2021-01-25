@@ -1,9 +1,9 @@
 module PerigrenGithubWebhooks
   class PullRequest < ApplicationRecord
 
-    has_many :reviews
+    has_many :reviews, foreign_key: :perigren_review_id
     has_many :review_comments
-    belongs_to :repository
+    belongs_to :repository, foreign_key: :perigren_repository_id
     belongs_to :creator, polymorphic: true
 
     scope :for_installation, ->(installation_id) { where(repository_id: InstallationsRepository.where(installation_id: installation_id).select(:repository_id).distinct.map(&:repository_id)) }
