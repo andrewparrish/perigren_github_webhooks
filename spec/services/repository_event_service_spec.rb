@@ -12,7 +12,7 @@ RSpec.describe PerigrenGithubWebhooks::RepositoryEventService, type: :service do
 
     it 'creates the repository created event' do
       expect(event.action).to eq 'created'
-      expect(event.installation_id).to eq test_data['installation']['id']
+      expect(event.perigren_installation_id).to eq test_data['installation']['id']
     end
 
     it 'creates the repo' do

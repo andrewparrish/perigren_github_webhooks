@@ -6,7 +6,7 @@ module PerigrenGithubWebhooks
       RepositoryEvent.create(
         action: @data['action'],
         sender: @sender,
-        installation_id: @data['installation']['id']
+        perigren_installation_id: @data['installation']['id']
       )
     end
   end

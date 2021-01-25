@@ -9,11 +9,11 @@ module PerigrenGithubWebhooks
 
       PullRequestReviewEvent.create(
         action: @data['action'],
-        installation_id: @data['installation']['id'],
+        perigren_installation_id: @data['installation']['id'],
         sender: @sender,
-        repository_id: @repo.id,
-        pull_request_id: @pr.id,
-        review_id: @review.id
+        perigren_repository_id: @repo.id,
+        perigren_pull_request_id: @pr.id,
+        perigren_review_id: @review.id
       )
     end
 

@@ -70,7 +70,7 @@ class PerigrenGithubWebhooksCreateGithubModels < ActiveRecord::Migration[6.1]
       t.timestamps
     end
 
-    create_table(:installations) do |t|
+    create_table(:perigren_installations) do |t|
       t.integer :account_id, index: true
       t.string :account_type
       t.string :repository_selection
@@ -90,7 +90,7 @@ class PerigrenGithubWebhooksCreateGithubModels < ActiveRecord::Migration[6.1]
       t.string :action
       t.integer :sender_id, index: true
       t.string :sender_type
-      t.integer :installation_id
+      t.integer :perigren_installation_id
       t.timestamps
     end
 
@@ -180,7 +180,7 @@ class PerigrenGithubWebhooksCreateGithubModels < ActiveRecord::Migration[6.1]
       t.timestamps
     end
 
-    create_table(:reviews) do |t|
+    create_table(:perigren_reviews) do |t|
       t.string :perigren_commit_id
       t.integer :perigren_github_user_id
       t.string :node_id
@@ -191,15 +191,15 @@ class PerigrenGithubWebhooksCreateGithubModels < ActiveRecord::Migration[6.1]
       t.string :pull_request_url
       t.string :author_association
       t.json :_links
-      t.bigint :pull_request_id, index: true
+      t.bigint :perigren_pull_request_id, index: true
       t.timestamps
     end
 
-    create_table(:pull_request_review_events) do |t|
+    create_table(:perigren_pull_request_review_events) do |t|
       t.integer :perigren_repository_id
-      t.integer :installation_id, index: true, null: false
-      t.integer :pull_request_id
-      t.integer :review_id
+      t.integer :perigren_installation_id, index: { name: 'index_perigren_pr_review_events_on_installation_id' }, null: false
+      t.integer :perigren_pull_request_id
+      t.integer :perigren_review_id
       t.string :action
       t.integer :sender_id, index: true
       t.string :sender_type
@@ -209,11 +209,11 @@ class PerigrenGithubWebhooksCreateGithubModels < ActiveRecord::Migration[6.1]
     create_table(:pull_request_events) do |t|
       t.string :action
       t.integer :number
-      t.integer :pull_request_id
+      t.integer :perigren_pull_request_id
       t.integer :perigren_repository_id
       t.integer :sender_id
       t.string :sender_type
-      t.integer :installation_id
+      t.integer :perigren_installation_id
       t.timestamps
     end
 
@@ -235,7 +235,7 @@ class PerigrenGithubWebhooksCreateGithubModels < ActiveRecord::Migration[6.1]
       t.timestamps
     end
 
-    create_table(:pull_requests) do |t|
+    create_table(:perigren_pull_requests) do |t|
       t.string :node_id, index: true
       t.integer :number
       t.string :state
@@ -257,7 +257,7 @@ class PerigrenGithubWebhooksCreateGithubModels < ActiveRecord::Migration[6.1]
       t.integer :creator_id, index: true
       t.string :creator_type
       t.integer :requested_reviewers, array: true
-      t.integer :requested_perigren_teams, array: true
+      t.integer :requested_teams, array: true
       t.json :_links
       t.string :author_association
       t.bigint :perigren_repository_id, index: true
@@ -278,7 +278,7 @@ class PerigrenGithubWebhooksCreateGithubModels < ActiveRecord::Migration[6.1]
       t.string :html_url
       t.string :pull_request_url
       t.json :_links
-      t.integer :pull_request_id
+      t.integer :perigren_pull_request_id
       t.integer :perigren_github_user_id
       t.timestamps
     end
@@ -289,7 +289,7 @@ class PerigrenGithubWebhooksCreateGithubModels < ActiveRecord::Migration[6.1]
       t.string :description
       t.string :color
       t.boolean :default
-      t.integer :pull_request_id
+      t.integer :perigren_pull_request_id
       t.timestamps
     end
 
@@ -315,7 +315,7 @@ class PerigrenGithubWebhooksCreateGithubModels < ActiveRecord::Migration[6.1]
 
     create_table(:perigren_repository_events) do |t|
       t.integer :perigren_repository_id
-      t.integer :installation_id, index: true
+      t.integer :perigren_installation_id, index: true
       t.string :action
       t.integer :sender_id, index: true
       t.string :sender_type
@@ -384,9 +384,9 @@ class PerigrenGithubWebhooksCreateGithubModels < ActiveRecord::Migration[6.1]
     end
 
 
-    create_table(:perigren_github_users_installations) do |t|
+    create_table(:perigren_github_users_) do |t|
       t.bigint :perigren_github_user_id, index: { name: 'index_perigren_github_users_installs_on_perigren_github_user_id' }
-      t.bigint :installation_id, index: { name: 'index_perigren_github_users_installs_on_perigren_install_id' }
+      t.bigint :perigren_installation_id, index: { name: 'index_perigren_github_users_installs_on_perigren_install_id' }
     end
 
     create_table(:plans) do |t|
@@ -402,7 +402,7 @@ class PerigrenGithubWebhooksCreateGithubModels < ActiveRecord::Migration[6.1]
     end
 
     create_table(:installation_perigren_repositories_events) do |t|
-      t.integer :installation_id
+      t.integer :perigren_installation_id
       t.string :action
       t.integer :perigren_repositories_added, array: true
       t.integer :perigren_repositories_removed, array: true
@@ -436,7 +436,7 @@ class PerigrenGithubWebhooksCreateGithubModels < ActiveRecord::Migration[6.1]
     
     create_table(:pull_request_review_comment_events) do |t|
       t.integer :perigren_repository_id
-      t.integer :pull_request_id
+      t.integer :perigren_pull_request_id
       t.integer :review_comment_id
       t.string :action
       t.integer :sender_id, index: true, null: false
@@ -448,8 +448,8 @@ class PerigrenGithubWebhooksCreateGithubModels < ActiveRecord::Migration[6.1]
     add_foreign_key :create_events, :perigren_repositories
     add_foreign_key :commit_comment_events, :repository_comments
     add_foreign_key :commit_comment_events, :perigren_repositories
-    add_foreign_key :installation_events, :installations
-    add_foreign_key :installation_perigren_repositories_events, :installations
+    add_foreign_key :installation_events, :perigren_installations
+    add_foreign_key :installation_perigren_repositories_events, :perigren_installations
     add_foreign_key :marketplace_purchase_events, :marketplace_purchases
     add_foreign_key :marketplace_purchases, :plans
     add_foreign_key :perigren_teams, :perigren_organizations
@@ -459,16 +459,16 @@ class PerigrenGithubWebhooksCreateGithubModels < ActiveRecord::Migration[6.1]
     add_foreign_key :membership_events, :perigren_teams
     add_foreign_key :organization_events, :perigren_organizations
     add_foreign_key :organization_events, :memberships
-    add_foreign_key :reviews, :perigren_github_users
-    add_foreign_key :pull_request_review_events, :reviews
-    add_foreign_key :pull_request_review_events, :pull_requests
-    add_foreign_key :pull_request_review_events, :perigren_repositories
-    add_foreign_key :pull_request_review_comment_events, :pull_requests
+    add_foreign_key :perigren_reviews, :perigren_github_users
+    add_foreign_key :perigren_pull_request_review_events, :perigren_reviews
+    add_foreign_key :perigren_pull_request_review_events, :perigren_pull_requests
+    add_foreign_key :perigren_pull_request_review_events, :perigren_repositories
+    add_foreign_key :pull_request_review_comment_events, :perigren_pull_requests
     add_foreign_key :pull_request_review_comment_events, :review_comments
-    add_foreign_key :pull_requests, :perigren_github_users, column: :assignee_id
-    add_foreign_key :review_comments, :pull_requests
+    add_foreign_key :perigren_pull_requests, :perigren_github_users, column: :assignee_id
+    add_foreign_key :review_comments, :perigren_pull_requests
     add_foreign_key :review_comments, :perigren_github_users
-    add_foreign_key :labels, :pull_requests
+    add_foreign_key :labels, :perigren_pull_requests
     add_foreign_key :perigren_push_events, :perigren_repositories
     add_foreign_key :perigren_repository_events, :perigren_repositories
     add_foreign_key :perigren_status_events, :perigren_commits
@@ -480,12 +480,12 @@ class PerigrenGithubWebhooksCreateGithubModels < ActiveRecord::Migration[6.1]
     add_foreign_key :perigren_team_add_events, :perigren_repositories
     add_foreign_key :perigren_team_add_events, :perigren_organizations
 
-    create_join_table :installations, :perigren_repositories
+    create_join_table :perigren_installations, :perigren_repositories
     create_join_table :installation_events, :perigren_repositories
     create_join_table :memberships, :perigren_organizations
     create_join_table :perigren_commits, :perigren_push_events
     create_join_table :branches, :perigren_status_events
     create_join_table :perigren_repositories, :perigren_github_users
-    create_join_table :milestones, :pull_requests
+    create_join_table :milestones, :perigren_pull_requests
   end
 end
