@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_26_000250) do
+ActiveRecord::Schema.define(version: 2021_01_26_014632) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -157,20 +157,6 @@ ActiveRecord::Schema.define(version: 2021_01_26_000250) do
     t.index ["sender_id"], name: "index_membership_events_on_sender_id"
   end
 
-  create_table "memberships", force: :cascade do |t|
-    t.integer "perigren_github_user_id"
-    t.string "state"
-    t.string "role"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["perigren_github_user_id"], name: "index_memberships_on_perigren_github_user_id"
-  end
-
-  create_table "memberships_perigren_organizations", id: false, force: :cascade do |t|
-    t.bigint "membership_id", null: false
-    t.bigint "perigren_organization_id", null: false
-  end
-
   create_table "milestones", force: :cascade do |t|
     t.string "node_id"
     t.string "title"
@@ -194,22 +180,6 @@ ActiveRecord::Schema.define(version: 2021_01_26_000250) do
   create_table "milestones_perigren_pull_requests", id: false, force: :cascade do |t|
     t.bigint "milestone_id", null: false
     t.bigint "perigren_pull_request_id", null: false
-  end
-
-  create_table "organization_events", force: :cascade do |t|
-    t.integer "perigren_organization_id"
-    t.integer "membership_id"
-    t.string "action"
-    t.integer "member_id"
-    t.string "member_type"
-    t.integer "sender_id"
-    t.string "sender_type"
-    t.integer "invitation_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["invitation_id"], name: "index_organization_events_on_invitation_id"
-    t.index ["member_id"], name: "index_organization_events_on_member_id"
-    t.index ["sender_id"], name: "index_organization_events_on_sender_id"
   end
 
   create_table "perigren_commits", force: :cascade do |t|
@@ -253,7 +223,7 @@ ActiveRecord::Schema.define(version: 2021_01_26_000250) do
     t.index ["node_id"], name: "index_perigren_github_users_on_node_id"
   end
 
-  create_table "perigren_github_users_", force: :cascade do |t|
+  create_table "perigren_github_users_installations", force: :cascade do |t|
     t.bigint "perigren_github_user_id"
     t.bigint "perigren_installation_id"
     t.index ["perigren_github_user_id"], name: "index_perigren_github_users_installs_on_perigren_github_user_id"
@@ -297,12 +267,54 @@ ActiveRecord::Schema.define(version: 2021_01_26_000250) do
     t.bigint "perigren_repository_id", null: false
   end
 
+  create_table "perigren_memberships", force: :cascade do |t|
+    t.integer "perigren_github_user_id"
+    t.string "state"
+    t.string "role"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["perigren_github_user_id"], name: "index_perigren_memberships_on_perigren_github_user_id"
+  end
+
+  create_table "perigren_memberships_organizations", id: false, force: :cascade do |t|
+    t.bigint "perigren_membership_id", null: false
+    t.bigint "perigren_organization_id", null: false
+  end
+
+  create_table "perigren_organization_events", force: :cascade do |t|
+    t.integer "perigren_organization_id"
+    t.integer "perigren_membership_id"
+    t.string "action"
+    t.integer "member_id"
+    t.string "member_type"
+    t.integer "sender_id"
+    t.string "sender_type"
+    t.integer "invitation_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["invitation_id"], name: "index_perigren_organization_events_on_invitation_id"
+    t.index ["member_id"], name: "index_perigren_organization_events_on_member_id"
+    t.index ["sender_id"], name: "index_perigren_organization_events_on_sender_id"
+  end
+
   create_table "perigren_organizations", force: :cascade do |t|
     t.string "login"
     t.string "node_id"
     t.string "avatar_url"
     t.text "description"
     t.index ["node_id"], name: "index_perigren_organizations_on_node_id"
+  end
+
+  create_table "perigren_pull_request_events", force: :cascade do |t|
+    t.string "action"
+    t.integer "number"
+    t.integer "perigren_pull_request_id"
+    t.integer "perigren_repository_id"
+    t.integer "sender_id"
+    t.string "sender_type"
+    t.integer "perigren_installation_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "perigren_pull_request_review_comment_events", force: :cascade do |t|
@@ -548,18 +560,6 @@ ActiveRecord::Schema.define(version: 2021_01_26_000250) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "pull_request_events", force: :cascade do |t|
-    t.string "action"
-    t.integer "number"
-    t.integer "perigren_pull_request_id"
-    t.integer "perigren_repository_id"
-    t.integer "sender_id"
-    t.string "sender_type"
-    t.integer "perigren_installation_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-  end
-
   create_table "repository_comments", force: :cascade do |t|
     t.string "url"
     t.string "html_url"
@@ -589,9 +589,9 @@ ActiveRecord::Schema.define(version: 2021_01_26_000250) do
   add_foreign_key "member_events", "perigren_repositories"
   add_foreign_key "membership_events", "perigren_organizations"
   add_foreign_key "membership_events", "perigren_teams"
-  add_foreign_key "memberships", "perigren_github_users"
-  add_foreign_key "organization_events", "memberships"
-  add_foreign_key "organization_events", "perigren_organizations"
+  add_foreign_key "perigren_memberships", "perigren_github_users"
+  add_foreign_key "perigren_organization_events", "perigren_memberships"
+  add_foreign_key "perigren_organization_events", "perigren_organizations"
   add_foreign_key "perigren_pull_request_review_comment_events", "perigren_pull_requests"
   add_foreign_key "perigren_pull_request_review_comment_events", "perigren_review_comments"
   add_foreign_key "perigren_pull_request_review_events", "perigren_pull_requests"

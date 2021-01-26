@@ -16,9 +16,9 @@ module PerigrenGithubWebhooks
       PullRequestEvent.create(
         action: @data['action'],
         sender: @sender,
-        repository_id: @repo.id,
-        pull_request_id: @pr.id,
-        installation_id: @data['installation']['id'],
+        perigren_repository_id: @repo.id,
+        perigren_pull_request_id: @pr.id,
+        perigren_installation_id: @data['installation']['id'],
         number: @data['number']
       )
     end
