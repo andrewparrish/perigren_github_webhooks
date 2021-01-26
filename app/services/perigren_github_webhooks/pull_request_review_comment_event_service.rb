@@ -10,9 +10,9 @@ module PerigrenGithubWebhooks
       event = PullRequestReviewCommentEvent.create(
         action: @data['action'],
         sender: @sender,
-        repository_id: @repo.id,
-        pull_request_id: @pr.id,
-        review_comment_id: @comment.id
+        perigren_repository_id: @repo.id,
+        perigren_pull_request_id: @pr.id,
+        perigren_review_comment_id: @comment.id
       )
 
       #FeedbackLeftNotificationWorker.perform_async(@pr.id, @sender.id)
@@ -21,8 +21,8 @@ module PerigrenGithubWebhooks
     end
 
     def create_review_comment(comment_data)
-      comment_data['github_user_id'] = @user.id
-      comment_data['pull_request_id'] = @pr.id
+      comment_data['perigren_github_user_id'] = @user.id
+      comment_data['perigren_pull_request_id'] = @pr.id
       @comment = ReviewComment.find_or_create_by(
         clean_data(comment_data, ReviewComment, ['_links'])
       ) 

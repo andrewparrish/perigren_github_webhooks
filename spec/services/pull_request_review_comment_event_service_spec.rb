@@ -13,16 +13,16 @@ RSpec.describe PerigrenGithubWebhooks::PullRequestReviewCommentEventService, typ
 
     it 'creates the pull request review comment event' do
       expect(event.action).to eq 'created'
-      expect(event.review_comment_id).to eq 191908831
-      expect(event.pull_request_id).to eq 191568743
-      expect(event.repository_id).to eq 135493233
+      expect(event.perigren_review_comment_id).to eq 191908831
+      expect(event.perigren_pull_request_id).to eq 191568743
+      expect(event.perigren_repository_id).to eq 135493233
       expect(event.sender_id).to eq 21031067
       expect(event.sender_type).to eq 'PerigrenGithubWebhooks::GithubUser'
     end
 
     it 'creates the review comment for the event' do
       comment = PerigrenGithubWebhooks::ReviewComment.find(191908831)
-      expect(comment.pull_request_id).to eq 191568743
+      expect(comment.perigren_pull_request_id).to eq 191568743
       expect(comment.node_id).to eq test_data['comment']['node_id']
     end
 

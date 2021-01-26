@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_25_234313) do
+ActiveRecord::Schema.define(version: 2021_01_26_000250) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -305,6 +305,18 @@ ActiveRecord::Schema.define(version: 2021_01_25_234313) do
     t.index ["node_id"], name: "index_perigren_organizations_on_node_id"
   end
 
+  create_table "perigren_pull_request_review_comment_events", force: :cascade do |t|
+    t.integer "perigren_repository_id"
+    t.integer "perigren_pull_request_id"
+    t.integer "perigren_review_comment_id"
+    t.string "action"
+    t.integer "sender_id", null: false
+    t.string "sender_type"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["sender_id"], name: "index_perigren_pull_request_review_comment_events_on_sender_id"
+  end
+
   create_table "perigren_pull_request_review_events", force: :cascade do |t|
     t.integer "perigren_repository_id"
     t.integer "perigren_installation_id", null: false
@@ -424,6 +436,30 @@ ActiveRecord::Schema.define(version: 2021_01_25_234313) do
     t.index ["sender_id"], name: "index_perigren_repository_events_on_sender_id"
   end
 
+  create_table "perigren_review_comments", force: :cascade do |t|
+    t.string "url"
+    t.string "node_id"
+    t.text "diff_hunk"
+    t.string "path"
+    t.integer "position"
+    t.integer "original_position"
+    t.string "perigren_commit_id"
+    t.string "original_perigren_commit_id"
+    t.integer "in_reply_to_id"
+    t.text "body"
+    t.string "html_url"
+    t.string "pull_request_url"
+    t.json "_links"
+    t.integer "perigren_pull_request_id"
+    t.integer "perigren_github_user_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["in_reply_to_id"], name: "index_perigren_review_comments_on_in_reply_to_id"
+    t.index ["node_id"], name: "index_perigren_review_comments_on_node_id"
+    t.index ["original_perigren_commit_id"], name: "index_perigren_review_comments_on_original_perigren_commit_id"
+    t.index ["perigren_commit_id"], name: "index_perigren_review_comments_on_perigren_commit_id"
+  end
+
   create_table "perigren_reviews", force: :cascade do |t|
     t.string "perigren_commit_id"
     t.integer "perigren_github_user_id"
@@ -524,18 +560,6 @@ ActiveRecord::Schema.define(version: 2021_01_25_234313) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "pull_request_review_comment_events", force: :cascade do |t|
-    t.integer "perigren_repository_id"
-    t.integer "perigren_pull_request_id"
-    t.integer "review_comment_id"
-    t.string "action"
-    t.integer "sender_id", null: false
-    t.string "sender_type"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["sender_id"], name: "index_pull_request_review_comment_events_on_sender_id"
-  end
-
   create_table "repository_comments", force: :cascade do |t|
     t.string "url"
     t.string "html_url"
@@ -554,30 +578,6 @@ ActiveRecord::Schema.define(version: 2021_01_25_234313) do
     t.index ["owner_id"], name: "index_repository_comments_on_owner_id"
   end
 
-  create_table "review_comments", force: :cascade do |t|
-    t.string "url"
-    t.string "node_id"
-    t.text "diff_hunk"
-    t.string "path"
-    t.integer "position"
-    t.integer "original_position"
-    t.string "perigren_commit_id"
-    t.string "original_perigren_commit_id"
-    t.integer "in_reply_to_id"
-    t.text "body"
-    t.string "html_url"
-    t.string "pull_request_url"
-    t.json "_links"
-    t.integer "perigren_pull_request_id"
-    t.integer "perigren_github_user_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["in_reply_to_id"], name: "index_review_comments_on_in_reply_to_id"
-    t.index ["node_id"], name: "index_review_comments_on_node_id"
-    t.index ["original_perigren_commit_id"], name: "index_review_comments_on_original_perigren_commit_id"
-    t.index ["perigren_commit_id"], name: "index_review_comments_on_perigren_commit_id"
-  end
-
   add_foreign_key "commit_comment_events", "perigren_repositories"
   add_foreign_key "commit_comment_events", "repository_comments"
   add_foreign_key "create_events", "perigren_repositories"
@@ -592,12 +592,16 @@ ActiveRecord::Schema.define(version: 2021_01_25_234313) do
   add_foreign_key "memberships", "perigren_github_users"
   add_foreign_key "organization_events", "memberships"
   add_foreign_key "organization_events", "perigren_organizations"
+  add_foreign_key "perigren_pull_request_review_comment_events", "perigren_pull_requests"
+  add_foreign_key "perigren_pull_request_review_comment_events", "perigren_review_comments"
   add_foreign_key "perigren_pull_request_review_events", "perigren_pull_requests"
   add_foreign_key "perigren_pull_request_review_events", "perigren_repositories"
   add_foreign_key "perigren_pull_request_review_events", "perigren_reviews"
   add_foreign_key "perigren_pull_requests", "perigren_github_users", column: "assignee_id"
   add_foreign_key "perigren_push_events", "perigren_repositories"
   add_foreign_key "perigren_repository_events", "perigren_repositories"
+  add_foreign_key "perigren_review_comments", "perigren_github_users"
+  add_foreign_key "perigren_review_comments", "perigren_pull_requests"
   add_foreign_key "perigren_reviews", "perigren_github_users"
   add_foreign_key "perigren_status_events", "perigren_commits"
   add_foreign_key "perigren_status_events", "perigren_repositories"
@@ -608,8 +612,4 @@ ActiveRecord::Schema.define(version: 2021_01_25_234313) do
   add_foreign_key "perigren_team_events", "perigren_repositories"
   add_foreign_key "perigren_team_events", "perigren_teams"
   add_foreign_key "perigren_teams", "perigren_organizations"
-  add_foreign_key "pull_request_review_comment_events", "perigren_pull_requests"
-  add_foreign_key "pull_request_review_comment_events", "review_comments"
-  add_foreign_key "review_comments", "perigren_github_users"
-  add_foreign_key "review_comments", "perigren_pull_requests"
 end

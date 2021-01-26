@@ -264,7 +264,7 @@ class PerigrenGithubWebhooksCreateGithubModels < ActiveRecord::Migration<%= "[#{
       t.timestamps
     end
 
-    create_table(:review_comments) do |t|
+    create_table(:perigren_review_comments) do |t|
       t.string :url
       t.string :node_id, index: true
       t.text :diff_hunk
@@ -384,7 +384,8 @@ class PerigrenGithubWebhooksCreateGithubModels < ActiveRecord::Migration<%= "[#{
     end
 
 
-    create_table(:perigren_github_users_) do |t|
+    # TODO: WTF happened here
+    create_table(:perigren_github_users_installations) do |t|
       t.bigint :perigren_github_user_id, index: { name: 'index_perigren_github_users_installs_on_perigren_github_user_id' }
       t.bigint :perigren_installation_id, index: { name: 'index_perigren_github_users_installs_on_perigren_install_id' }
     end
@@ -434,10 +435,10 @@ class PerigrenGithubWebhooksCreateGithubModels < ActiveRecord::Migration<%= "[#{
       t.string :parents, array: true
     end
     
-    create_table(:pull_request_review_comment_events) do |t|
+    create_table(:perigren_pull_request_review_comment_events) do |t|
       t.integer :perigren_repository_id
       t.integer :perigren_pull_request_id
-      t.integer :review_comment_id
+      t.integer :perigren_review_comment_id
       t.string :action
       t.integer :sender_id, index: true, null: false
       t.string :sender_type
@@ -463,11 +464,11 @@ class PerigrenGithubWebhooksCreateGithubModels < ActiveRecord::Migration<%= "[#{
     add_foreign_key :perigren_pull_request_review_events, :perigren_reviews
     add_foreign_key :perigren_pull_request_review_events, :perigren_pull_requests
     add_foreign_key :perigren_pull_request_review_events, :perigren_repositories
-    add_foreign_key :pull_request_review_comment_events, :perigren_pull_requests
-    add_foreign_key :pull_request_review_comment_events, :review_comments
+    add_foreign_key :perigren_pull_request_review_comment_events, :perigren_pull_requests
+    add_foreign_key :perigren_pull_request_review_comment_events, :perigren_review_comments
     add_foreign_key :perigren_pull_requests, :perigren_github_users, column: :assignee_id
-    add_foreign_key :review_comments, :perigren_pull_requests
-    add_foreign_key :review_comments, :perigren_github_users
+    add_foreign_key :perigren_review_comments, :perigren_pull_requests
+    add_foreign_key :perigren_review_comments, :perigren_github_users
     add_foreign_key :labels, :perigren_pull_requests
     add_foreign_key :perigren_push_events, :perigren_repositories
     add_foreign_key :perigren_repository_events, :perigren_repositories

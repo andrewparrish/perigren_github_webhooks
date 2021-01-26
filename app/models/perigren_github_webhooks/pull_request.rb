@@ -1,6 +1,5 @@
 module PerigrenGithubWebhooks
   class PullRequest < ApplicationRecord
-
     has_many :reviews, foreign_key: :perigren_review_id
     has_many :review_comments
     belongs_to :repository, foreign_key: :perigren_repository_id
