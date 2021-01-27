@@ -14,8 +14,8 @@ module PerigrenGithubWebhooks
         action: @data['action'],
         scope: @data['scope'],
         member: @member,
-        team_id: @team.id,
-        organization_id: @organization.id
+        perigren_team_id: @team.id,
+        perigren_organization_id: @organization.id
       )
     end
 

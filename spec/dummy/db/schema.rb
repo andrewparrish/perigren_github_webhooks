@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_26_014632) do
+ActiveRecord::Schema.define(version: 2021_01_27_023040) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -67,30 +67,6 @@ ActiveRecord::Schema.define(version: 2021_01_26_014632) do
     t.bigint "perigren_repository_id", null: false
   end
 
-  create_table "installation_perigren_repositories_events", force: :cascade do |t|
-    t.integer "perigren_installation_id"
-    t.string "action"
-    t.integer "perigren_repositories_added", array: true
-    t.integer "perigren_repositories_removed", array: true
-    t.integer "account_id"
-    t.string "account_type"
-    t.integer "sender_id"
-    t.string "sender_type"
-    t.string "repository_selection"
-    t.integer "app_id"
-    t.integer "target_id"
-    t.string "target_type"
-    t.json "permissions"
-    t.string "events", array: true
-    t.string "single_file_name"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["account_id"], name: "index_installation_perigren_repositories_events_on_account_id"
-    t.index ["app_id"], name: "index_installation_perigren_repositories_events_on_app_id"
-    t.index ["sender_id"], name: "index_installation_perigren_repositories_events_on_sender_id"
-    t.index ["target_id"], name: "index_installation_perigren_repositories_events_on_target_id"
-  end
-
   create_table "labels", force: :cascade do |t|
     t.string "node_id"
     t.string "name"
@@ -126,35 +102,6 @@ ActiveRecord::Schema.define(version: 2021_01_26_014632) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["account_id"], name: "index_marketplace_purchases_on_account_id"
-  end
-
-  create_table "member_events", force: :cascade do |t|
-    t.integer "perigren_repository_id"
-    t.string "action"
-    t.integer "member_id"
-    t.string "member_type"
-    t.json "event_changes"
-    t.integer "sender_id"
-    t.string "sender_type"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["member_id"], name: "index_member_events_on_member_id"
-    t.index ["sender_id"], name: "index_member_events_on_sender_id"
-  end
-
-  create_table "membership_events", force: :cascade do |t|
-    t.integer "perigren_organization_id"
-    t.integer "perigren_team_id"
-    t.string "action"
-    t.string "scope"
-    t.string "member_id"
-    t.string "member_type"
-    t.integer "sender_id"
-    t.string "sender_type"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["member_id"], name: "index_membership_events_on_member_id"
-    t.index ["sender_id"], name: "index_membership_events_on_sender_id"
   end
 
   create_table "milestones", force: :cascade do |t|
@@ -242,6 +189,30 @@ ActiveRecord::Schema.define(version: 2021_01_26_014632) do
     t.bigint "perigren_github_user_id", null: false
   end
 
+  create_table "perigren_installation_repositories_events", force: :cascade do |t|
+    t.integer "perigren_installation_id"
+    t.string "action"
+    t.integer "repositories_added", array: true
+    t.integer "repositories_removed", array: true
+    t.integer "account_id"
+    t.string "account_type"
+    t.integer "sender_id"
+    t.string "sender_type"
+    t.string "repository_selection"
+    t.integer "app_id"
+    t.integer "target_id"
+    t.string "target_type"
+    t.json "permissions"
+    t.string "events", array: true
+    t.string "single_file_name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["account_id"], name: "index_perigren_installation_repositories_events_on_account_id"
+    t.index ["app_id"], name: "index_perigren_installation_repositories_events_on_app_id"
+    t.index ["sender_id"], name: "index_perigren_installation_repositories_events_on_sender_id"
+    t.index ["target_id"], name: "index_perigren_installation_repositories_events_on_target_id"
+  end
+
   create_table "perigren_installations", force: :cascade do |t|
     t.integer "account_id"
     t.string "account_type"
@@ -265,6 +236,35 @@ ActiveRecord::Schema.define(version: 2021_01_26_014632) do
   create_table "perigren_installations_repositories", id: false, force: :cascade do |t|
     t.bigint "perigren_installation_id", null: false
     t.bigint "perigren_repository_id", null: false
+  end
+
+  create_table "perigren_member_events", force: :cascade do |t|
+    t.integer "perigren_repository_id"
+    t.string "action"
+    t.integer "member_id"
+    t.string "member_type"
+    t.json "event_changes"
+    t.integer "sender_id"
+    t.string "sender_type"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["member_id"], name: "index_perigren_member_events_on_member_id"
+    t.index ["sender_id"], name: "index_perigren_member_events_on_sender_id"
+  end
+
+  create_table "perigren_membership_events", force: :cascade do |t|
+    t.integer "perigren_organization_id"
+    t.integer "perigren_team_id"
+    t.string "action"
+    t.string "scope"
+    t.string "member_id"
+    t.string "member_type"
+    t.integer "sender_id"
+    t.string "sender_type"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["member_id"], name: "index_perigren_membership_events_on_member_id"
+    t.index ["sender_id"], name: "index_perigren_membership_events_on_sender_id"
   end
 
   create_table "perigren_memberships", force: :cascade do |t|
@@ -582,13 +582,13 @@ ActiveRecord::Schema.define(version: 2021_01_26_014632) do
   add_foreign_key "commit_comment_events", "repository_comments"
   add_foreign_key "create_events", "perigren_repositories"
   add_foreign_key "installation_events", "perigren_installations"
-  add_foreign_key "installation_perigren_repositories_events", "perigren_installations"
   add_foreign_key "labels", "perigren_pull_requests"
   add_foreign_key "marketplace_purchase_events", "marketplace_purchases"
   add_foreign_key "marketplace_purchases", "plans"
-  add_foreign_key "member_events", "perigren_repositories"
-  add_foreign_key "membership_events", "perigren_organizations"
-  add_foreign_key "membership_events", "perigren_teams"
+  add_foreign_key "perigren_installation_repositories_events", "perigren_installations"
+  add_foreign_key "perigren_member_events", "perigren_repositories"
+  add_foreign_key "perigren_membership_events", "perigren_organizations"
+  add_foreign_key "perigren_membership_events", "perigren_teams"
   add_foreign_key "perigren_memberships", "perigren_github_users"
   add_foreign_key "perigren_organization_events", "perigren_memberships"
   add_foreign_key "perigren_organization_events", "perigren_organizations"

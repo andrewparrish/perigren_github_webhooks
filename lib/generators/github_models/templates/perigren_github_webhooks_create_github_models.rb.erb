@@ -138,7 +138,7 @@ class PerigrenGithubWebhooksCreateGithubModels < ActiveRecord::Migration<%= "[#{
       t.timestamps
     end
 
-    create_table(:member_events) do |t|
+    create_table(:perigren_member_events) do |t|
       t.integer :perigren_repository_id
       t.string :action
       t.integer :member_id, index: true
@@ -149,7 +149,7 @@ class PerigrenGithubWebhooksCreateGithubModels < ActiveRecord::Migration<%= "[#{
       t.timestamps
     end
 
-    create_table(:membership_events) do |t|
+    create_table(:perigren_membership_events) do |t|
       t.integer :perigren_organization_id
       t.integer :perigren_team_id
       t.string :action
@@ -402,11 +402,11 @@ class PerigrenGithubWebhooksCreateGithubModels < ActiveRecord::Migration<%= "[#{
       t.timestamps
     end
 
-    create_table(:installation_perigren_repositories_events) do |t|
+    create_table(:perigren_installation_repositories_events) do |t|
       t.integer :perigren_installation_id
       t.string :action
-      t.integer :perigren_repositories_added, array: true
-      t.integer :perigren_repositories_removed, array: true
+      t.integer :repositories_added, array: true
+      t.integer :repositories_removed, array: true
       t.integer :account_id, index: true
       t.string :account_type
       t.integer :sender_id, index: true
@@ -450,14 +450,14 @@ class PerigrenGithubWebhooksCreateGithubModels < ActiveRecord::Migration<%= "[#{
     add_foreign_key :commit_comment_events, :repository_comments
     add_foreign_key :commit_comment_events, :perigren_repositories
     add_foreign_key :installation_events, :perigren_installations
-    add_foreign_key :installation_perigren_repositories_events, :perigren_installations
+    add_foreign_key :perigren_installation_repositories_events, :perigren_installations
     add_foreign_key :marketplace_purchase_events, :marketplace_purchases
     add_foreign_key :marketplace_purchases, :plans
     add_foreign_key :perigren_teams, :perigren_organizations
-    add_foreign_key :member_events, :perigren_repositories
+    add_foreign_key :perigren_member_events, :perigren_repositories
     add_foreign_key :perigren_memberships, :perigren_github_users
-    add_foreign_key :membership_events, :perigren_organizations
-    add_foreign_key :membership_events, :perigren_teams
+    add_foreign_key :perigren_membership_events, :perigren_organizations
+    add_foreign_key :perigren_membership_events, :perigren_teams
     add_foreign_key :perigren_organization_events, :perigren_organizations
     add_foreign_key :perigren_organization_events, :perigren_memberships
     add_foreign_key :perigren_reviews, :perigren_github_users
