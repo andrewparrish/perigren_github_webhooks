@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_27_024658) do
+ActiveRecord::Schema.define(version: 2021_01_27_140732) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,17 +24,6 @@ ActiveRecord::Schema.define(version: 2021_01_27_024658) do
   create_table "branches_perigren_status_events", id: false, force: :cascade do |t|
     t.bigint "branch_id", null: false
     t.bigint "perigren_status_event_id", null: false
-  end
-
-  create_table "commit_comment_events", force: :cascade do |t|
-    t.string "action"
-    t.integer "repository_comment_id"
-    t.integer "perigren_repository_id"
-    t.integer "sender_id"
-    t.string "sender_type"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["sender_id"], name: "index_commit_comment_events_on_sender_id"
   end
 
   create_table "labels", force: :cascade do |t|
@@ -97,6 +86,17 @@ ActiveRecord::Schema.define(version: 2021_01_27_024658) do
   create_table "milestones_perigren_pull_requests", id: false, force: :cascade do |t|
     t.bigint "milestone_id", null: false
     t.bigint "perigren_pull_request_id", null: false
+  end
+
+  create_table "perigren_commit_comment_events", force: :cascade do |t|
+    t.string "action"
+    t.integer "perigren_repository_comment_id"
+    t.integer "perigren_repository_id"
+    t.integer "sender_id"
+    t.string "sender_type"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["sender_id"], name: "index_perigren_commit_comment_events_on_sender_id"
   end
 
   create_table "perigren_commits", force: :cascade do |t|
@@ -436,6 +436,24 @@ ActiveRecord::Schema.define(version: 2021_01_27_024658) do
     t.index ["owner_id"], name: "index_perigren_repositories_on_owner_id"
   end
 
+  create_table "perigren_repository_comments", force: :cascade do |t|
+    t.string "url"
+    t.string "html_url"
+    t.string "node_id"
+    t.integer "owner_id"
+    t.string "owner_type"
+    t.integer "position"
+    t.integer "line"
+    t.string "path"
+    t.string "perigren_commit_id"
+    t.string "author_association"
+    t.text "body"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["node_id"], name: "index_perigren_repository_comments_on_node_id"
+    t.index ["owner_id"], name: "index_perigren_repository_comments_on_owner_id"
+  end
+
   create_table "perigren_repository_events", force: :cascade do |t|
     t.integer "perigren_repository_id"
     t.integer "perigren_installation_id"
@@ -560,29 +578,11 @@ ActiveRecord::Schema.define(version: 2021_01_27_024658) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "repository_comments", force: :cascade do |t|
-    t.string "url"
-    t.string "html_url"
-    t.string "node_id"
-    t.integer "owner_id"
-    t.string "owner_type"
-    t.integer "position"
-    t.integer "line"
-    t.string "path"
-    t.string "perigren_commit_id"
-    t.string "author_association"
-    t.text "body"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["node_id"], name: "index_repository_comments_on_node_id"
-    t.index ["owner_id"], name: "index_repository_comments_on_owner_id"
-  end
-
-  add_foreign_key "commit_comment_events", "perigren_repositories"
-  add_foreign_key "commit_comment_events", "repository_comments"
   add_foreign_key "labels", "perigren_pull_requests"
   add_foreign_key "marketplace_purchase_events", "marketplace_purchases"
   add_foreign_key "marketplace_purchases", "plans"
+  add_foreign_key "perigren_commit_comment_events", "perigren_repositories"
+  add_foreign_key "perigren_commit_comment_events", "perigren_repository_comments"
   add_foreign_key "perigren_create_events", "perigren_repositories"
   add_foreign_key "perigren_installation_events", "perigren_installations"
   add_foreign_key "perigren_installation_repositories_events", "perigren_installations"

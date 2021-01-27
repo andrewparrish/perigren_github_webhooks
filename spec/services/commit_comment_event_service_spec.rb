@@ -14,7 +14,7 @@ RSpec.describe PerigrenGithubWebhooks::CommitCommentEventService, type: :service
     it 'creates the commit comment event' do
       expect(event.action).to eq('created')
       expect(event.sender_id).to eq(test_data['sender']['id'])
-      expect(event.repository_id).to eq(test_data['repository']['id'])
+      expect(event.perigren_repository_id).to eq(test_data['repository']['id'])
     end
 
     it 'creates the repository' do

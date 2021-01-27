@@ -9,7 +9,7 @@ module PerigrenGithubWebhooks
 
     def create_event
       CommitCommentEvent.create(action: @data['action'], sender: @sender,
-                                repository_id: @repo.id, repository_comment_id: @repo_comment.id)
+                                perigren_repository_id: @repo.id, perigren_repository_comment_id: @repo_comment.id)
     end
 
     def create_repository_comment(comment_data)
