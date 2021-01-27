@@ -34,7 +34,7 @@ class PerigrenGithubWebhooksCreateGithubModels < ActiveRecord::Migration<%= "[#{
       t.timestamps
     end
 
-    create_table(:create_events) do |t|
+    create_table(:perigren_create_events) do |t|
       t.integer :perigren_repository_id
       t.string :ref, index: true
       t.string :ref_type
@@ -86,7 +86,7 @@ class PerigrenGithubWebhooksCreateGithubModels < ActiveRecord::Migration<%= "[#{
       t.timestamps
     end
 
-    create_table(:installation_events) do |t|
+    create_table(:perigren_installation_events) do |t|
       t.string :action
       t.integer :sender_id, index: true
       t.string :sender_type
@@ -446,10 +446,10 @@ class PerigrenGithubWebhooksCreateGithubModels < ActiveRecord::Migration<%= "[#{
     end
 
 
-    add_foreign_key :create_events, :perigren_repositories
+    add_foreign_key :perigren_create_events, :perigren_repositories
     add_foreign_key :commit_comment_events, :repository_comments
     add_foreign_key :commit_comment_events, :perigren_repositories
-    add_foreign_key :installation_events, :perigren_installations
+    add_foreign_key :perigren_installation_events, :perigren_installations
     add_foreign_key :perigren_installation_repositories_events, :perigren_installations
     add_foreign_key :marketplace_purchase_events, :marketplace_purchases
     add_foreign_key :marketplace_purchases, :plans
@@ -482,7 +482,7 @@ class PerigrenGithubWebhooksCreateGithubModels < ActiveRecord::Migration<%= "[#{
     add_foreign_key :perigren_team_add_events, :perigren_organizations
 
     create_join_table :perigren_installations, :perigren_repositories
-    create_join_table :installation_events, :perigren_repositories
+    create_join_table :perigren_installation_events, :perigren_repositories
     create_join_table :perigren_memberships, :perigren_organizations
     create_join_table :perigren_commits, :perigren_push_events
     create_join_table :branches, :perigren_status_events

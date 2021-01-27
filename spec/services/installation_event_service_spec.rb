@@ -48,7 +48,7 @@ RSpec.describe PerigrenGithubWebhooks::InstallationEventService, type: :service 
       end
       
       it 'creates the installation repository record' do
-        assoc = PerigrenGithubWebhooks::InstallationsRepository.find_by(installation_id: 135043, repository_id:  121716388)
+        assoc = PerigrenGithubWebhooks::InstallationsRepository.find_by(perigren_installation_id: 135043, perigren_repository_id:  121716388)
         expect(assoc).not_to be_nil
       end
 
@@ -58,7 +58,7 @@ RSpec.describe PerigrenGithubWebhooks::InstallationEventService, type: :service 
       end
 
       it 'creates a github_user_installations record' do
-        assoc = PerigrenGithubWebhooks::GithubUsersInstallations.find_by(github_user_id: user_id, installation_id: test_event_data['installation']['id'])
+        assoc = PerigrenGithubWebhooks::GithubUsersInstallations.find_by(perigren_github_user_id: user_id, perigren_installation_id: test_event_data['installation']['id'])
         expect(assoc).not_to be_nil
       end
     end
