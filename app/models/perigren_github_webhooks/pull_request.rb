@@ -5,6 +5,7 @@ module PerigrenGithubWebhooks
     belongs_to :repository, foreign_key: :perigren_repository_id
     belongs_to :creator, polymorphic: true
 
+    #TODO: This needs to be swapped over
     scope :for_installation, ->(installation_id) { where(repository_id: InstallationsRepository.where(installation_id: installation_id).select(:repository_id).distinct.map(&:repository_id)) }
 
     def creator_name
