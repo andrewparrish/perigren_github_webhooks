@@ -1,8 +1,9 @@
 module PerigrenGithubWebhooks
   class ReviewComment < ApplicationRecord
-    belongs_to :pull_request
-    belongs_to :github_user
+    belongs_to :pull_request, foreign_key: :perigren_pull_request_id
+    belongs_to :github_user, foreign_key: :perigren_github_user_id
 
+    # TODO: Remove this shit
     scope :unaddressed, ->() { where(addressed: false) }
 
     before_save :update_addressed!, if: :will_save_change_to_position?

@@ -12,7 +12,7 @@ RSpec.describe PerigrenGithubWebhooks::MemberEventService, type: :service do
 
     it 'creates the member event' do
       expect(event.event_changes).to eq test_data['changes']
-      expect(event.repository_id).to eq test_data['repository']['id']
+      expect(event.perigren_repository_id).to eq test_data['repository']['id']
       expect(event.member_id).to eq test_data['member']['id']
       expect(event.sender_id).to eq 21031067
     end

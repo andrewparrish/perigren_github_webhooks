@@ -12,7 +12,7 @@ RSpec.describe PerigrenGithubWebhooks::OrganizationEventService, type: :service 
 
     it 'creates the organization event' do
       expect(event.action).to eq 'member_added'
-      expect(event.organization_id).to eq test_data['organization']['id']
+      expect(event.perigren_organization_id).to eq test_data['organization']['id']
     end
 
     #it 'calls the background job' do
@@ -23,7 +23,7 @@ RSpec.describe PerigrenGithubWebhooks::OrganizationEventService, type: :service 
     #end
 
     it 'creates the membership' do
-      membership = PerigrenGithubWebhooks::Membership.find_by(github_user_id: test_data['membership']['user']['id'])
+      membership = PerigrenGithubWebhooks::Membership.find_by(perigren_github_user_id: test_data['membership']['user']['id'])
       expect(membership.role).to eq 'member'
     end
 
@@ -40,7 +40,7 @@ RSpec.describe PerigrenGithubWebhooks::OrganizationEventService, type: :service 
     end
 
     it 'creates the membership organizations record' do
-      assoc = PerigrenGithubWebhooks::MembershipsOrganization.find_by(organization_id: test_data['organization']['id'])
+      assoc = PerigrenGithubWebhooks::MembershipsOrganization.find_by(perigren_organization_id: test_data['organization']['id'])
       expect(assoc).not_to be_nil
     end
   end

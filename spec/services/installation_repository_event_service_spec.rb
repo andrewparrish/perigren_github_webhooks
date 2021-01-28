@@ -12,7 +12,7 @@ RSpec.describe PerigrenGithubWebhooks::InstallationRepositoryEventService, type:
 
     it 'creates the installation repository event' do
       expect(event.action).to eq 'added'
-      expect(event.installation_id).to equal 165203
+      expect(event.perigren_installation_id).to equal 165203
       expect(event.sender_id).to eq 3136770
       expect(event.sender_type).to eq 'PerigrenGithubWebhooks::GithubUser'
       expect(event.repositories_added).to eq [142814010]
@@ -35,7 +35,7 @@ RSpec.describe PerigrenGithubWebhooks::InstallationRepositoryEventService, type:
     end
 
     it 'creates the association' do
-      assoc = PerigrenGithubWebhooks::InstallationsRepository.find_by(repository_id: 142814010, installation_id: 165203)
+      assoc = PerigrenGithubWebhooks::InstallationsRepository.find_by(perigren_repository_id: 142814010, perigren_installation_id: 165203)
       expect(assoc).not_to be_nil
     end
   end

@@ -11,7 +11,7 @@ module PerigrenGithubWebhooks
     def create_event
       InstallationRepositoriesEvent.create(
         action: @data['action'],
-        installation_id: @installation.id,
+        perigren_installation_id: @installation.id,
         sender: @sender,
         repository_selection: @data['repository_selection'],
         repositories_added: @data['repositories_added'].map { |r| r['id'] },
@@ -38,9 +38,9 @@ module PerigrenGithubWebhooks
     def handle_repo(repo, action)
       repo = create_repository(repo)
       if(action == 'added')
-        InstallationsRepository.find_or_create_by(installation_id: @installation.id, repository_id: repo.id)
+        InstallationsRepository.find_or_create_by(perigren_installation_id: @installation.id, perigren_repository_id: repo.id)
       elsif (action == 'removed')
-        InstallationsRepository.where(installation_id: @installation.id, repository_id: repo.id).delete_all
+        InstallationsRepository.where(perigren_installation_id: @installation.id, perigren_repository_id: repo.id).delete_all
       end
     end
   end

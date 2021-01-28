@@ -9,7 +9,7 @@ module PerigrenGithubWebhooks
     def create_event
       CreateEvent.create(clean_data(@data, CreateEvent)) do |event|
         event.sender = @sender
-        event.repository_id = @repo.id
+        event.perigren_repository_id = @repo.id
       end
     end
   end

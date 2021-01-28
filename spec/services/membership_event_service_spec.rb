@@ -15,8 +15,8 @@ RSpec.describe PerigrenGithubWebhooks::MembershipEventService, type: :service do
       expect(event.member_id).to eq '21031067'
       expect(event.member_type).to eq 'PerigrenGithubWebhooks::GithubUser'
       expect(event.sender_id).to eq 21031067
-      expect(event.team_id).to eq 2723476
-      expect(event.organization_id).to eq 38302899
+      expect(event.perigren_team_id).to eq 2723476
+      expect(event.perigren_organization_id).to eq 38302899
     end
 
     it 'creates the member user model' do

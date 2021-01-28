@@ -1,4 +1,4 @@
-require 'perigren_github_webhooks'
+require 'rails_helper'
 
 RSpec.describe PerigrenGithubWebhooks::PullRequestReviewEventService, type: :service do
 
@@ -13,14 +13,14 @@ RSpec.describe PerigrenGithubWebhooks::PullRequestReviewEventService, type: :ser
 
     it 'creates the pull request review event' do
       expect(event.action).to eq 'submitted'
-      expect(event.review_id).to eq test_data['review']['id']
-      expect(event.installation_id).to eq test_data['installation']['id']
+      expect(event.perigren_review_id).to eq test_data['review']['id']
+      expect(event.perigren_installation_id).to eq test_data['installation']['id']
     end
 
     it 'creates the review model' do
       review = PerigrenGithubWebhooks::Review.find(test_data['review']['id'])
       expect(review.node_id).to eq test_data['review']['node_id']
-      expect(review.pull_request_id).to eq test_data['pull_request']['id']
+      expect(review.perigren_pull_request_id).to eq test_data['pull_request']['id']
     end
 
     it 'creates the sender model' do

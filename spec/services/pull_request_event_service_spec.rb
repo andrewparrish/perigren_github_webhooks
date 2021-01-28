@@ -12,8 +12,8 @@ RSpec.describe PerigrenGithubWebhooks::PullRequestEventService, type: :service d
 
     it 'creates the pull request event' do
       expect(event.number).to eq 1
-      expect(event.pull_request_id).to eq 205517141
-      expect(event.installation_id).to eq 165203
+      expect(event.perigren_pull_request_id).to eq 205517141
+      expect(event.perigren_installation_id).to eq 165203
       expect(event.sender_id).to eq 3136770
     end
 
@@ -22,7 +22,7 @@ RSpec.describe PerigrenGithubWebhooks::PullRequestEventService, type: :service d
       expect(pr.node_id).to eq test_data['pull_request']['node_id']
       expect(pr.title).to eq test_data['pull_request']['title']
       expect(pr.number).to eq test_data['pull_request']['number']
-      expect(pr.repository_id).to eq test_data['repository']['id']
+      expect(pr.perigren_repository_id).to eq test_data['repository']['id']
     end
 
     it 'creates the sender' do

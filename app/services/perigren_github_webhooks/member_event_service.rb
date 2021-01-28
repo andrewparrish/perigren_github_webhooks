@@ -11,7 +11,7 @@ module PerigrenGithubWebhooks
         action: @data['action'],
         member: @member,
         event_changes: @data['changes'],
-        repository_id: @repo.id
+        perigren_repository_id: @repo.id
       )
     end
   end

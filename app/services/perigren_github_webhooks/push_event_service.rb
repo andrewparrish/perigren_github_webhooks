@@ -7,7 +7,7 @@ module PerigrenGithubWebhooks
       PushEvent.create(
         clean_data(@data, PushEvent, ['commits']).merge(
           sender: @sender,
-          repository_id: @repo.id,
+          perigren_repository_id: @repo.id,
           commits: @data['commits'].map { |c| c['sha'] }
         )
       )

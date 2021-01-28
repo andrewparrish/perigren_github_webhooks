@@ -9,17 +9,17 @@ module PerigrenGithubWebhooks
 
       PullRequestReviewEvent.create(
         action: @data['action'],
-        installation_id: @data['installation']['id'],
+        perigren_installation_id: @data['installation']['id'],
         sender: @sender,
-        repository_id: @repo.id,
-        pull_request_id: @pr.id,
-        review_id: @review.id
+        perigren_repository_id: @repo.id,
+        perigren_pull_request_id: @pr.id,
+        perigren_review_id: @review.id
       )
     end
 
     def create_review(review_data)
       review_data['github_user_id'] = @user.id 
-      review_data['pull_request_id'] = @pr.id
+      review_data['perigren_pull_request_id'] = @pr.id
       @review = Review.find_or_create_by(
         clean_data(review_data, Review, ['_links'])
       )

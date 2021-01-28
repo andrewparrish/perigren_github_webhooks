@@ -24,7 +24,7 @@ module PerigrenGithubWebhooks
 
     def create_pull_request(pr_data)
       create_creator
-      pr_data['repository_id'] = @repo.id
+      pr_data['perigren_repository_id'] = @repo.id
       @pr = PullRequest.find_or_initialize_by(id: pr_data['id'])
       @pr.update(clean_data(pr_data, PullRequest, ['head', 'base', '_links']).merge(pull_request_data))
       @pr
@@ -81,7 +81,7 @@ module PerigrenGithubWebhooks
     end
 
     def create_team(team_data)
-      team_data['organization_id'] = @organization.id
+      team_data['perigren_organization_id'] = @organization.id
       @team = Team.find_or_initialize_by(id: team_data['id'])
       @team.update(clean_data(team_data, Team))
       @team
