@@ -1,4 +1,4 @@
-class GithubModelsGenerator < Rails::Generators::NamedBase
+class GithubModelsGenerator < Rails::Generators::Base
   source_root File.expand_path('templates', __dir__)
 
   include Rails::Generators::Migration
