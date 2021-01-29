@@ -1,5 +1,7 @@
 module PerigrenGithubWebhooks
   class GithubWebhooksController < ApplicationController
+    include Auth
+
     class NoServiceFoundError < StandardError; end
 
     before_action :check_authorization
@@ -8,17 +10,10 @@ module PerigrenGithubWebhooks
       event = request.env['HTTP_X_GITHUB_EVENT']
       raise(NoServiceFoundError, "no service for event: #{event}") unless service_klass(event)
       service_klass(event).new(JSON.parse(request.body.read)).perform
-      render text: "Successfully completed event processing for event: #{event}"
+      head :ok
     end
 
     private
-
-    def check_authorization
-      # TODO: This should be configurable if you want to include auth
-      signature = 'sha1=' + OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha1'),
-                                                    ENV['GITHUB_SECRET'], request.body.read)
-      render text: "Signatures didn't match!", status: 503 unless Rack::Utils.secure_compare(signature, request.env['HTTP_X_HUB_SIGNATURE'])
-    end
 
     def service_klass(event)
       {
