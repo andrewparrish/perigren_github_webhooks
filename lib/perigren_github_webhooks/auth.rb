@@ -1,7 +1,7 @@
 module PerigrenGithubWebhooks
   module Auth
     def check_authorization
-      # TODO: This should be configurable if you want to include auth
+      return true unless PerigrenGithubWebhooks.use_webhooks_secret_auth
       verify_signature
     end
 

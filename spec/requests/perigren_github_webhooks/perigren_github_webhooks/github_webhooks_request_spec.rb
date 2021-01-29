@@ -16,7 +16,17 @@ RSpec.describe "PerigrenGithubWebhooks::GithubWebhooks", type: :request do
     end
 
     describe "auth check disabled" do
+      before do
+        expect(PerigrenGithubWebhooks).to receive(:use_webhooks_secret_auth).and_return(false)
+      end
 
+      it "doesn't call to check authorization" do
+expect_any_instance_of(PerigrenGithubWebhooks::Auth).not_to receive(:verify_signature)
+        post "/perigren/github_webhooks#create",
+          headers: { 'HTTP_X_GITHUB_EVENT' => 'ping', 'CONTENT_TYPE' => 'application/json', 'ACCEPT' => 'application/json' },
+          params: {}.to_json
+
+      end
     end
   end
 end
