@@ -4,9 +4,14 @@ require "perigren_github_webhooks/auth"
 
 module PerigrenGithubWebhooks
   # TODO: Add config for this
-  mattr_accessor :user_class
+  mattr_accessor :user_class,
+                 :use_webhooks_secret_auth
 
-  mattr_accessor :use_webhooks_secret_auth
-  @@use_webhooks_secret_auth = true
+  self.use_webhooks_secret_auth = true
+  self.user_class = nil
+
+  def self.setup(&block)
+    yield self
+  end
 end
 

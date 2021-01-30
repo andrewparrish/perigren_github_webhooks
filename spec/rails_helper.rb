@@ -2,6 +2,7 @@
 require 'simplecov'
 SimpleCov.start
 
+require 'rails/all'
 require 'pry'
 require 'spec_helper'
 ENV['RAILS_ENV'] ||= 'test'
