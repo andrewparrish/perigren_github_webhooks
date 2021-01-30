@@ -5,6 +5,7 @@ RSpec.describe "PerigrenGithubWebhooks::GithubWebhooks", type: :request do
     describe "auth check enabled" do 
       before do
         ENV['PERIGREN_GITHUB_SECRET'] = 'foo'
+        expect(PerigrenGithubWebhooks).to receive(:use_webhooks_secret_auth).and_return(true)
       end
 
       it "calls check_authorization" do
@@ -21,7 +22,7 @@ RSpec.describe "PerigrenGithubWebhooks::GithubWebhooks", type: :request do
       end
 
       it "doesn't call to check authorization" do
-expect_any_instance_of(PerigrenGithubWebhooks::Auth).not_to receive(:verify_signature)
+        expect_any_instance_of(PerigrenGithubWebhooks::Auth).not_to receive(:verify_signature)
         post "/perigren/github_webhooks#create",
           headers: { 'HTTP_X_GITHUB_EVENT' => 'ping', 'CONTENT_TYPE' => 'application/json', 'ACCEPT' => 'application/json' },
           params: {}.to_json
