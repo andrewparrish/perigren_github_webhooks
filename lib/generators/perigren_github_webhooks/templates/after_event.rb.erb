@@ -1,0 +1,7 @@
+PerigrenGithubWebhooks::<%= @event_class %>EventService.class_eval do
+  prepend AfterExecutable
+
+  def after_event
+    # Fill in stuffs here
+  end
+end

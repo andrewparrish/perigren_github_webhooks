@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     perigren_github_webhooks (0.1.0)
-      rails (~> 6.1.0)
+      rails (>= 6.0.0)
 
 GEM
   remote: https://rubygems.org/
