@@ -8,6 +8,7 @@ module PerigrenGithubWebhooks
 
     def create
       event = request.env['HTTP_X_GITHUB_EVENT']
+      PerigrenGithubWebhooks.logger.info "Processing Event Type: #{event}"
       raise(NoServiceFoundError, "no service for event: #{event}") unless service_klass(event)
       service_klass(event).new(JSON.parse(request.body.read)).perform
       head :ok
