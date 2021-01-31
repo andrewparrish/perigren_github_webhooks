@@ -1,5 +1,5 @@
 module PerigrenGithubWebhooks
-  class PingEventService
+  class PingEventService < GithubWebhookService
     def initialize(data)
     end
 
