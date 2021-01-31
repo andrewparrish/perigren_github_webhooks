@@ -16,7 +16,7 @@ module PerigrenGithubWebhooks
       # TODO: This is definitely wrong
       user_klass ||= PerigrenGithubWebhooks.user_class || GithubUser
       user = user_klass.find_or_initialize_by(id: user_data['id'])
-      user.update(user_data.select do |k, _v|
+      user.update!(user_data.select do |k, _v|
         user_klass.column_names.include?(k) &&  k != 'type'
       end)
       user
@@ -73,8 +73,8 @@ module PerigrenGithubWebhooks
       installation_data['deleted'] = true if @data['action'] == 'deleted'
       installation_data['installer_id'] = @sender.id
       account = create_user(installation_data['account'])
-      @installation = Installation.find_or_create_by(id: installation_data['id']) do |installation|
-          installation.update(parse_installation_data(installation_data, account))
+      @installation = Installation.find_or_create_by!(id: installation_data['id']) do |installation|
+          installation.update!(parse_installation_data(installation_data, account))
         end
     end
 
