@@ -10,8 +10,8 @@ module PerigrenGithubWebhooks
 
     def create_user(user_data)
       # TODO: Clean this up
-      user_data['type'] = 'PerigrenGithubWebhooks::Organization' if user_data['type'] == 'Organization'
-      user_klass = user_data['type'].constantize rescue nil
+      user_klass = PerigrenGithubWebhooks::Organization if user_data['type'] == 'Organization'
+      #user_klass = user_data['type'].constantize rescue nil
       # TODO: Configurable overwrite on user class
       # TODO: This is definitely wrong
       user_klass ||= PerigrenGithubWebhooks.user_class || GithubUser
@@ -66,7 +66,7 @@ module PerigrenGithubWebhooks
     end
 
     def organization_creation
-      @organization = create_user(@data['organization'].merge('type' => 'PerigrenGithubWebhooks::Organization'))
+      @organization = create_user(@data['organization'].merge('type' => 'Organization'))
     end
 
     def create_installation(installation_data)
