@@ -11,7 +11,7 @@ module PerigrenGithubWebhooks
         if CREATE_ACTIONS.include?(@data['action'])
           InstallationsRepository.find_or_create_by(assoc_hash(repo_data['id']))
         elsif DELETE_ACTIONS.include?(@data['action'])
-          InstallationRepository.where(assoc_hash(repo_data['id'])).delete_all
+          InstallationsRepository.where(assoc_hash(repo_data['id'])).delete_all
         end
       end
       create_event
