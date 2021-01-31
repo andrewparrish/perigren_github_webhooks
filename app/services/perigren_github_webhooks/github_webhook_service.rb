@@ -73,11 +73,9 @@ module PerigrenGithubWebhooks
       installation_data['deleted'] = true if @data['action'] == 'deleted'
       installation_data['installer_id'] = @sender.id
       account = create_user(installation_data['account'])
-      @installation = Installation.find_or_create_by parse_installation_data(installation_data, account) do |installation|
-        installation.id = installation_data['id']
-        installation.permissions = installation_data['permissions']
-        installation.save
-      end
+      @installation = Installation.find_or_create_by(id: installation_data['id']) do |installation|
+          installation.update(parse_installation_data(installation_data, account))
+        end
     end
 
     def create_team(team_data)
