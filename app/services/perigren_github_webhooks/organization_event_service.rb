@@ -1,10 +1,12 @@
 module PerigrenGithubWebhooks
   class OrganizationEventService < GithubWebhookService
+    prepend CreateEventCheck
+
     def perform
       super
       membership_creation
       organization_creation
-      event = event_creation
+      event = create_event
       association_creation
       # TODO: async processes
       #SynchronizeOrganizationWorker.perform_async(@data['installation']['id'],
@@ -13,7 +15,7 @@ module PerigrenGithubWebhooks
       event
     end
 
-    def event_creation
+    def create_event
       OrganizationEvent.create(
         sender: @sender,
         perigren_organization_id: @organization.id,

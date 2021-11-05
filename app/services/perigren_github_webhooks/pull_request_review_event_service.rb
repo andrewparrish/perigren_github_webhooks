@@ -1,12 +1,17 @@
 module PerigrenGithubWebhooks
   class PullRequestReviewEventService < GithubWebhookService
+    prepend CreateEventCheck
+
     def perform
       super
       @user = create_user(@data['review']['user'])
       create_repository(@data['repository'])
       create_pull_request(@data['pull_request'])
       create_review(@data['review'])
+      create_event      
+    end
 
+    def create_event
       PullRequestReviewEvent.create(
         action: @data['action'],
         perigren_installation_id: @data['installation']['id'],

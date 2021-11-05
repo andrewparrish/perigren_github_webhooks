@@ -1,6 +1,8 @@
 module PerigrenGithubWebhooks
   # TODO: Relationships between repos, orgs, teams
   class TeamEventService < GithubWebhookService
+    prepend CreateEventCheck
+
     def perform
       super
       create_repository(@data['repository'])

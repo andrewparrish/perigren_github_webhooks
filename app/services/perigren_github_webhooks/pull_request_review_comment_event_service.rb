@@ -1,12 +1,19 @@
 module PerigrenGithubWebhooks
   class PullRequestReviewCommentEventService < GithubWebhookService
+    prepend CreateEventCheck
+
     def perform
       super
       @user = create_user(@data['comment']['user'])
       create_repository(@data['repository'])
       create_pull_request(@data['pull_request'])  
       create_review_comment(@data['comment'])
+      #FeedbackLeftNotificationWorker.perform_async(@pr.id, @sender.id)
+      #SlackWorkers::FeedbackLeftSlackWorker.perform_async(@pr.id, @sender.id)
+      create_event
+    end
 
+    def create_event
       event = PullRequestReviewCommentEvent.create(
         action: @data['action'],
         sender: @sender,
@@ -14,9 +21,6 @@ module PerigrenGithubWebhooks
         perigren_pull_request_id: @pr.id,
         perigren_review_comment_id: @comment.id
       )
-
-      #FeedbackLeftNotificationWorker.perform_async(@pr.id, @sender.id)
-      #SlackWorkers::FeedbackLeftSlackWorker.perform_async(@pr.id, @sender.id)
       event
     end
 

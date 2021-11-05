@@ -1,14 +1,16 @@
 module PerigrenGithubWebhooks
   class MembershipEventService < GithubWebhookService
+    prepend CreateEventCheck 
+
     def perform
       super
       member_creation
       organization_creation
       team_creation
-      event_creation
+      create_event
     end
 
-    def event_creation
+    def create_event
       MembershipEvent.create(
         sender: @sender,
         action: @data['action'],

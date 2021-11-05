@@ -1,5 +1,7 @@
 module PerigrenGithubWebhooks
   class InstallationRepositoryEventService < GithubWebhookService
+    prepend CreateEventCheck
+
     def perform
       super
       create_installation(@data['installation'])

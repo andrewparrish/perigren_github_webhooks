@@ -1,5 +1,7 @@
 module PerigrenGithubWebhooks
   class PullRequestEventService < GithubWebhookService
+    prepend CreateEventCheck
+
     def perform
       super
       create_repository(@data['repository'])
